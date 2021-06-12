@@ -1,0 +1,28 @@
+<UserControl x:Class="WpfApp.GameStart.GameStartView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+             d:DesignHeight="114"
+             d:DesignWidth="230">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="LostFocus">
+            <i:InvokeCommandAction Command="{Binding Validate}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid>
+        <StackPanel Margin="16" Width="198">
+            <TextBox md:HintAssist.Hint="Имя"
+                     Text="{Binding FirstName, Mode=TwoWay, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=LostFocus}" />
+            <TextBox md:HintAssist.Hint="Фамилия"
+                     Text="{Binding LastName, Mode=TwoWay, NotifyOnValidationError=True, ValidatesOnExceptions=True}" />
+            <Button HorizontalAlignment="Center"
+                    Command="{Binding StepNext}"
+                    Content="Далее" />
+        </StackPanel>
+    </Grid>
+</UserControl>
