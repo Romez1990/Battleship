@@ -1,0 +1,7 @@
+﻿# Build
+bin/
+obj/
+
+# Visual Studio
+/.vs/
+*.csproj.user
