@@ -13,7 +13,7 @@
 
         <ItemsControl>
             <ItemsControl.Resources>
-                <CollectionViewSource x:Key="ViewModelShips" Source="{Binding Ships}"/>
+                <CollectionViewSource x:Key="ViewModelShips" Source="{Binding ShipRectangles}"/>
                 <CollectionViewSource x:Key="ViewModelGrid" Source="{Binding Grid}"/>
             </ItemsControl.Resources>
 

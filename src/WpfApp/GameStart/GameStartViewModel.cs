@@ -6,7 +6,8 @@ using WpfApp.Toolkit;
 
 namespace WpfApp.GameStart {
     public class GameStartViewModel : Form {
-        public GameStartViewModel() {
+        public GameStartViewModel(EventHandler<PlayerCreatedEventArgs> navigateToGameBoard) {
+            NavigateToGameBoard += navigateToGameBoard;
             StepNext = new RelayCommand(OnStepNext);
             Validate = new RelayCommand(ValidateAllProperties);
         }
@@ -35,13 +36,5 @@ namespace WpfApp.GameStart {
         }
 
         public event EventHandler<PlayerCreatedEventArgs> NavigateToGameBoard;
-    }
-
-    public class PlayerCreatedEventArgs : EventArgs {
-        public PlayerCreatedEventArgs(Player player) {
-            Player = player;
-        }
-
-        public Player Player { get; }
     }
 }

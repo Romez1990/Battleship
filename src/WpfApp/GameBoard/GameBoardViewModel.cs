@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -8,8 +9,9 @@ using WpfApp.Toolkit;
 
 namespace WpfApp.GameBoard {
     public class GameBoardViewModel : ViewModel {
-        public GameBoardViewModel(Player player) {
+        public GameBoardViewModel(Player player, EventHandler<ShipsCreatedEventArgs> navigateToSelectConnectionMethod) {
             _player = player;
+            NavigateToSelectConnectionMethod += navigateToSelectConnectionMethod;
 
             FieldSize = Field.Size.Map(CalculateGridOffset) + GridThickness;
 
@@ -35,18 +37,19 @@ namespace WpfApp.GameBoard {
         public const int CellSize = 50;
         public const int GridThickness = 1;
 
-        private ImmutableArray<ShipRectangle> _ships;
+        private ImmutableArray<Ship> _ships;
 
-        public ImmutableArray<ShipRectangle> Ships {
-            get => _ships;
-            private set => SetProperty(ref _ships, value);
+        private ImmutableArray<ShipRectangle> _shipRectangleRectangles;
+
+        public ImmutableArray<ShipRectangle> ShipRectangles {
+            get => _shipRectangleRectangles;
+            private set => SetProperty(ref _shipRectangleRectangles, value);
         }
 
-        private void SetRandomField() {
-            Ships = _randomShipPlacement.GetShips()
+        private void SetRandomField() =>
+            ShipRectangles = (_ships = _randomShipPlacement.GetShips())
                 .Map(ship => new ShipRectangle(ship, CalculateGridOffset))
                 .ToImmutableArray();
-        }
 
         public ImmutableArray<GridRectangle> Grid { get; }
 
@@ -63,8 +66,9 @@ namespace WpfApp.GameBoard {
         private int CalculateGridOffset(int i) =>
             i * (CellSize + GridThickness);
 
-        private void OnStepNext() {
+        private void OnStepNext() =>
+            NavigateToSelectConnectionMethod?.Invoke(this, new(_ships));
 
-        }
+        public event EventHandler<ShipsCreatedEventArgs> NavigateToSelectConnectionMethod;
     }
 }

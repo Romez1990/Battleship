@@ -7,6 +7,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:gs="clr-namespace:WpfApp.GameStart"
         xmlns:gb="clr-namespace:WpfApp.GameBoard"
+        xmlns:sc="clr-namespace:WpfApp.SelectConnectionMethod"
         xmlns:local="clr-namespace:WpfApp"
         mc:Ignorable="d"
         Title="MainWindow"
@@ -33,14 +34,16 @@
             <gb:GameBoardView />
         </DataTemplate>
 
+        <DataTemplate DataType="{x:Type sc:SelectConnectionMethodViewModel}">
+            <sc:SelectConnectionMethodView />
+        </DataTemplate>
+
         <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
             <Setter Property="Margin" Value="0, 0, 0, 20" />
         </Style>
     </Window.Resources>
 
-    <Grid>
-        <StackPanel Margin="16">
-            <ContentControl Content="{Binding CurrentViewModel}" />
-        </StackPanel>
+    <Grid Margin="16">
+        <ContentControl Content="{Binding CurrentViewModel}" />
     </Grid>
 </Window>
