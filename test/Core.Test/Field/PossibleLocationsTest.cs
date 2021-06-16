@@ -6,8 +6,7 @@ using NUnit.Framework;
 namespace Core.Test.Field {
     public class PossibleLocationsTest {
         [SetUp]
-        public void Setup() {
-        }
+        public void Setup() { }
 
         private readonly Random _random = new();
 

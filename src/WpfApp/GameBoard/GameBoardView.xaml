@@ -10,12 +10,12 @@
         <Button HorizontalAlignment="Center"
                 Margin="5"
                 Command="{Binding Random}"
-                Content="Random"/>
+                Content="Random" />
 
         <ItemsControl>
             <ItemsControl.Resources>
-                <CollectionViewSource x:Key="ViewModelShips" Source="{Binding ShipRectangles}"/>
-                <CollectionViewSource x:Key="ViewModelGrid" Source="{Binding Grid}"/>
+                <CollectionViewSource x:Key="ViewModelShips" Source="{Binding ShipRectangles}" />
+                <CollectionViewSource x:Key="ViewModelGrid" Source="{Binding Grid}" />
             </ItemsControl.Resources>
 
             <ItemsControl.ItemsSource>
@@ -23,9 +23,9 @@
                     <CollectionContainer Collection="{Binding Source={StaticResource ViewModelShips}}" />
                     <CollectionContainer Collection="{Binding Source={StaticResource ViewModelGrid}}" />
                     <!-- <CollectionContainer> -->
-                        <!-- <CollectionContainer.Collection> -->
-                            <!-- <CollectionViewSource Source="{Binding Ships}"/> -->
-                        <!-- </CollectionContainer.Collection> -->
+                    <!-- <CollectionContainer.Collection> -->
+                    <!-- <CollectionViewSource Source="{Binding Ships}"/> -->
+                    <!-- </CollectionContainer.Collection> -->
                     <!-- </CollectionContainer> -->
                 </CompositeCollection>
             </ItemsControl.ItemsSource>
@@ -36,10 +36,10 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemContainerStyle>
                 <Style TargetType="ContentPresenter">
-                    <Setter Property="Canvas.Left" Value="{Binding X}"/>
-                    <Setter Property="Canvas.Top" Value="{Binding Y}"/>
-                    <Setter Property="Width" Value="{Binding Width}"/>
-                    <Setter Property="Height" Value="{Binding Height}"/>
+                    <Setter Property="Canvas.Left" Value="{Binding X}" />
+                    <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                    <Setter Property="Width" Value="{Binding Width}" />
+                    <Setter Property="Height" Value="{Binding Height}" />
                 </Style>
             </ItemsControl.ItemContainerStyle>
             <ItemsControl.ItemTemplate>
