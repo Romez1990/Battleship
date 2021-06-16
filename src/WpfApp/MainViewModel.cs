@@ -1,7 +1,8 @@
-using System;
+using System.Collections.Immutable;
 using Core;
-using WpfApp.ConnectToGame;
-using WpfApp.CreateGame;
+using Core.Field;
+using Core.Session;
+using WpfApp.GameBattlefield;
 using WpfApp.GameBoard;
 using WpfApp.GameStart;
 using WpfApp.SelectConnectionMethod;
@@ -12,7 +13,16 @@ namespace WpfApp {
         public MainViewModel() {
             SetGameStart();
 #if DEBUG
-            SetGameBoard(null, new(new("Максим", "Жуков")));
+            _player = new("Максим", "Жуков");
+            var randomShipPlacement = new RandomShipPlacement();
+            _ships = randomShipPlacement.GetShips();
+
+            // SetGameBoard(this, new(_player));
+
+            // SetSelectConnectionMethod(null, new(_ships));
+            // ((SelectConnectionMethodViewModel)CurrentViewModel).CreateGame.Execute(null);
+
+            SetGameSession(this, new(_player));
 #endif
         }
 
@@ -23,21 +33,20 @@ namespace WpfApp {
             private set => SetProperty(ref _currentViewModel, value);
         }
 
+        private Player _player;
+        private Player _enemy;
+        private ImmutableArray<Ship> _ships;
+
         private void SetGameStart() =>
             _currentViewModel = new GameStartViewModel(SetGameBoard);
-
-        private Player _player;
 
         private void SetGameBoard(object sender, PlayerCreatedEventArgs e) =>
             CurrentViewModel = new GameBoardViewModel(_player = e.Player, SetSelectConnectionMethod);
 
         private void SetSelectConnectionMethod(object sender, ShipsCreatedEventArgs e) =>
-            CurrentViewModel = new SelectConnectionMethodViewModel(SetNavigateToCreateGame, SetNavigateToConnectToGame);
+            CurrentViewModel = new SelectConnectionMethodViewModel(_player, _ships = e.Ships, SetGameSession);
 
-        private void SetNavigateToCreateGame(object sender, EventArgs e) =>
-            CurrentViewModel = new CreateGameViewModel(_player);
-
-        private void SetNavigateToConnectToGame(object sender, EventArgs e) =>
-            CurrentViewModel = new ConnectToGameViewModel();
+        private void SetGameSession(object sender, GameCreatedEventArgs e) =>
+            CurrentViewModel = new BattlefieldViewModel(_player, _enemy = e.Enemy, _ships);
     }
 }

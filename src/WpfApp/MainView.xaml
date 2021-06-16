@@ -8,6 +8,7 @@
         xmlns:gs="clr-namespace:WpfApp.GameStart"
         xmlns:gb="clr-namespace:WpfApp.GameBoard"
         xmlns:sc="clr-namespace:WpfApp.SelectConnectionMethod"
+        xmlns:gbf="clr-namespace:WpfApp.GameBattlefield"
         xmlns:local="clr-namespace:WpfApp"
         mc:Ignorable="d"
         Title="MainWindow"
@@ -36,6 +37,10 @@
 
         <DataTemplate DataType="{x:Type sc:SelectConnectionMethodViewModel}">
             <sc:SelectConnectionMethodView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type gbf:BattlefieldViewModel}">
+            <gbf:CreateGameView />
         </DataTemplate>
 
         <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">

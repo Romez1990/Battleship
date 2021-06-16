@@ -10,12 +10,12 @@
         <Button HorizontalAlignment="Center"
                 Margin="5"
                 Command="{Binding Random}"
-                Content="Random" />
+                Content="Случайно" />
 
         <ItemsControl>
             <ItemsControl.Resources>
-                <CollectionViewSource x:Key="ViewModelShips" Source="{Binding ShipRectangles}" />
-                <CollectionViewSource x:Key="ViewModelGrid" Source="{Binding Grid}" />
+                <CollectionViewSource x:Key="ViewModelShips" Source="{Binding Battlefield.ShipRectangles}" />
+                <CollectionViewSource x:Key="ViewModelGrid" Source="{Binding Battlefield.Grid}" />
             </ItemsControl.Resources>
 
             <ItemsControl.ItemsSource>
@@ -31,7 +31,7 @@
             </ItemsControl.ItemsSource>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <Canvas Width="{Binding FieldSize.X}" Height="{Binding FieldSize.Y}" />
+                    <Canvas Width="{Binding Battlefield.FieldSize.X}" Height="{Binding Battlefield.FieldSize.Y}" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemContainerStyle>

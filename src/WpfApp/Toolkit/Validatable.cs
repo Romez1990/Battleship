@@ -10,16 +10,16 @@ using LanguageExt;
 
 namespace WpfApp.Toolkit {
     public abstract class Validatable : ViewModel, INotifyDataErrorInfo {
-        private readonly IDictionary<string, ImmutableArray<string>> _errors =
+        protected readonly IDictionary<string, ImmutableArray<string>> Errors =
             new Dictionary<string, ImmutableArray<string>>();
 
         public IEnumerable GetErrors(string propertyName) =>
-            _errors.ContainsKey(propertyName)
-                ? _errors[propertyName]
+            Errors.ContainsKey(propertyName)
+                ? Errors[propertyName]
                 : null;
 
         public bool HasErrors =>
-            _errors.Any();
+            Errors.Any();
 
         protected override void SetProperty<T>(ref T member, T val, [CallerMemberName] string propertyName = null) {
             base.SetProperty(ref member, val, propertyName);
@@ -34,14 +34,14 @@ namespace WpfApp.Toolkit {
             };
             var results = new List<ValidationResult>();
             Validator.TryValidateProperty(value, context, results);
-            var oldErrors = _errors.TryGetValue(propertyName);
+            var oldErrors = Errors.TryGetValue(propertyName);
             var newErrors = results
-                .Select(result => result.ErrorMessage)
+                .Map(result => result.ErrorMessage)
                 .ToImmutableArray();
             if (newErrors.Any()) {
-                _errors[propertyName] = newErrors;
+                Errors[propertyName] = newErrors;
             } else {
-                _errors.Remove(propertyName);
+                Errors.Remove(propertyName);
             }
 
             var isErrorsChanged = oldErrors

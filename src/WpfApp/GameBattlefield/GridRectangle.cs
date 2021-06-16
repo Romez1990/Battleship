@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using Core.Geometry;
 
-namespace WpfApp.GameBoard {
+namespace WpfApp.GameBattlefield {
     public record GridRectangle : FilledRectangle {
         public GridRectangle(Orientation orientation, int offset, int length, int thickness) : base(
             orientation switch {

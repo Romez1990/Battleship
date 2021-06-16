@@ -1,0 +1,116 @@
+﻿<UserControl x:Class="WpfApp.GameBattlefield.CreateGameView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2"
+                       HorizontalAlignment="Left"
+                       Text="{Binding Player}" />
+            <TextBlock Grid.Row="0"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2"
+                       HorizontalAlignment="Center"
+                       Text="{Binding Score}" />
+            <TextBlock Grid.Row="0"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2"
+                       HorizontalAlignment="Right"
+                       Text="{Binding Enemy}" />
+
+            <ItemsControl Grid.Row="1" Grid.Column="0">
+                <ItemsControl.Resources>
+                    <CollectionViewSource x:Key="ViewModelShips" Source="{Binding PlayerBattlefield.ShipRectangles}" />
+                    <CollectionViewSource x:Key="ViewModelGrid" Source="{Binding PlayerBattlefield.Grid}" />
+                </ItemsControl.Resources>
+
+                <ItemsControl.ItemsSource>
+                    <CompositeCollection>
+                        <CollectionContainer Collection="{Binding Source={StaticResource ViewModelShips}}" />
+                        <CollectionContainer Collection="{Binding Source={StaticResource ViewModelGrid}}" />
+                        <!-- <CollectionContainer> -->
+                        <!-- <CollectionContainer.Collection> -->
+                        <!-- <CollectionViewSource Source="{Binding Ships}"/> -->
+                        <!-- </CollectionContainer.Collection> -->
+                        <!-- </CollectionContainer> -->
+                    </CompositeCollection>
+                </ItemsControl.ItemsSource>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas Width="{Binding PlayerBattlefield.FieldSize.X}"
+                                Height="{Binding PlayerBattlefield.FieldSize.Y}" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="ContentPresenter">
+                        <Setter Property="Canvas.Left" Value="{Binding X}" />
+                        <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                        <Setter Property="Width" Value="{Binding Width}" />
+                        <Setter Property="Height" Value="{Binding Height}" />
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Rectangle Fill="{Binding Color}">
+                            <Rectangle.LayoutTransform>
+                                <RotateTransform Angle="{Binding Angle}"/>
+                            </Rectangle.LayoutTransform>
+                        </Rectangle>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <ItemsControl Grid.Row="1" Grid.Column="1">
+                <ItemsControl.Resources>
+                    <CollectionViewSource x:Key="ViewModelShips" Source="{Binding EnemyBattlefield.ShipRectangles}" />
+                    <CollectionViewSource x:Key="ViewModelGrid" Source="{Binding EnemyBattlefield.Grid}" />
+                </ItemsControl.Resources>
+
+                <ItemsControl.ItemsSource>
+                    <CompositeCollection>
+                        <CollectionContainer Collection="{Binding Source={StaticResource ViewModelShips}}" />
+                        <CollectionContainer Collection="{Binding Source={StaticResource ViewModelGrid}}" />
+                        <!-- <CollectionContainer> -->
+                        <!-- <CollectionCont/ainer.Collection> -->
+                        <!-- <CollectionViewSource Source="{Binding Ships}"/> -->
+                        <!-- </CollectionContainer.Collection> -->
+                        <!-- </CollectionContainer> -->
+                    </CompositeCollection>
+                </ItemsControl.ItemsSource>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas Width="{Binding EnemyBattlefield.FieldSize.X}"
+                                Height="{Binding EnemyBattlefield.FieldSize.Y}" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="ContentPresenter">
+                        <Setter Property="Canvas.Left" Value="{Binding X}" />
+                        <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                        <Setter Property="Width" Value="{Binding Width}" />
+                        <Setter Property="Height" Value="{Binding Height}" />
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Rectangle Fill="{Binding Color}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+    </StackPanel>
+</UserControl>
