@@ -14,15 +14,15 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Grid>
-        <StackPanel Margin="16" Width="198">
-            <TextBox md:HintAssist.Hint="Имя"
-                     Text="{Binding FirstName, Mode=TwoWay, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=LostFocus}" />
-            <TextBox md:HintAssist.Hint="Фамилия"
-                     Text="{Binding LastName, Mode=TwoWay, NotifyOnValidationError=True, ValidatesOnExceptions=True}" />
-            <Button HorizontalAlignment="Center"
-                    Command="{Binding StepNext}"
-                    Content="Далее" />
-        </StackPanel>
-    </Grid>
+    <StackPanel Margin="16"
+                Width="198"
+                VerticalAlignment="Center">
+        <TextBox md:HintAssist.Hint="Имя"
+                 Text="{Binding FirstName, Mode=TwoWay, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=LostFocus}" />
+        <TextBox md:HintAssist.Hint="Фамилия"
+                 Text="{Binding LastName, Mode=TwoWay, NotifyOnValidationError=True, ValidatesOnExceptions=True}" />
+        <Button HorizontalAlignment="Center"
+                Command="{Binding Submit}"
+                Content="Далее" />
+    </StackPanel>
 </UserControl>

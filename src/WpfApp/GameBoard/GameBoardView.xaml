@@ -5,9 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="500">
-    <StackPanel>
-        <TextBlock Text="{Binding PlayerName}"></TextBlock>
+    <StackPanel VerticalAlignment="Center">
+        <TextBlock Text="{Binding Player}" />
         <Button HorizontalAlignment="Center"
+                Margin="5"
                 Command="{Binding Random}"
                 Content="Random"/>
 
@@ -49,6 +50,7 @@
         </ItemsControl>
 
         <Button HorizontalAlignment="Center"
+                Margin="5"
                 Command="{Binding StepNext}"
                 Content="Далее" />
     </StackPanel>

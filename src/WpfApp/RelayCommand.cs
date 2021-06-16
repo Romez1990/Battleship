@@ -1,12 +1,9 @@
 using System;
 using System.Windows.Input;
 
-namespace WpfApp
-{
-    public class RelayCommand : ICommand
-    {
-        public RelayCommand(Action method, Func<bool> canExecuteMethod = null)
-        {
+namespace WpfApp {
+    public class RelayCommand : ICommand {
+        public RelayCommand(Action method, Func<bool> canExecuteMethod = null) {
             _method = method;
             _сanExecuteMethod = canExecuteMethod;
         }
@@ -24,8 +21,7 @@ namespace WpfApp
 
         public event EventHandler CanExecuteChanged;
 
-        public void RaiseCanExecuteChanged()
-        {
+        public void RaiseCanExecuteChanged() {
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
     }

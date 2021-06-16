@@ -6,6 +6,10 @@ using static LanguageExt.Prelude;
 
 namespace WpfApp.Toolkit {
     public abstract class Form : Validatable {
+        public Form() {
+            Submit = new(OnSubmitCommand);
+        }
+
         protected void ValidateAllProperties() {
             var baseProperties = typeof(Validatable)
                 .GetProperties();
@@ -22,5 +26,15 @@ namespace WpfApp.Toolkit {
 
         private bool IsCommandProperty(PropertyInfo property) =>
             typeof(ICommand).IsAssignableFrom(property.PropertyType);
+
+        public RelayCommand Submit { get; }
+
+        private void OnSubmitCommand() {
+            if (!HasErrors) {
+                OnSubmit();
+            }
+        }
+
+        protected abstract void OnSubmit();
     }
 }

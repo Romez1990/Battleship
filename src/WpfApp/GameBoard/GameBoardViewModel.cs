@@ -10,7 +10,7 @@ using WpfApp.Toolkit;
 namespace WpfApp.GameBoard {
     public class GameBoardViewModel : ViewModel {
         public GameBoardViewModel(Player player, EventHandler<ShipsCreatedEventArgs> navigateToSelectConnectionMethod) {
-            _player = player;
+            Player = player;
             NavigateToSelectConnectionMethod += navigateToSelectConnectionMethod;
 
             FieldSize = Field.Size.Map(CalculateGridOffset) + GridThickness;
@@ -26,9 +26,7 @@ namespace WpfApp.GameBoard {
         public RelayCommand Random { get; }
         public RelayCommand StepNext { get; }
 
-        private readonly Player _player;
-
-        public string PlayerName => $@"Игрок {_player.FirstName} {_player.LastName}";
+        public Player Player { get; }
 
         private readonly RandomShipPlacement _randomShipPlacement;
 
@@ -69,6 +67,6 @@ namespace WpfApp.GameBoard {
         private void OnStepNext() =>
             NavigateToSelectConnectionMethod?.Invoke(this, new(_ships));
 
-        public event EventHandler<ShipsCreatedEventArgs> NavigateToSelectConnectionMethod;
+        private event EventHandler<ShipsCreatedEventArgs> NavigateToSelectConnectionMethod;
     }
 }

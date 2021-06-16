@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Windows.Input;
 using Core;
 using WpfApp.Toolkit;
 
@@ -8,8 +7,7 @@ namespace WpfApp.GameStart {
     public class GameStartViewModel : Form {
         public GameStartViewModel(EventHandler<PlayerCreatedEventArgs> navigateToGameBoard) {
             NavigateToGameBoard += navigateToGameBoard;
-            StepNext = new RelayCommand(OnStepNext);
-            Validate = new RelayCommand(ValidateAllProperties);
+            Validate = new(ValidateAllProperties);
         }
 
         private string _firstName = "";
@@ -27,14 +25,13 @@ namespace WpfApp.GameStart {
             set => SetProperty(ref _lastName, value);
         }
 
-        public ICommand StepNext { get; }
-        public ICommand Validate { get; }
+        public RelayCommand Validate { get; }
 
-        private void OnStepNext() {
+        protected override void OnSubmit() {
             var player = new Player(FirstName, LastName);
             NavigateToGameBoard?.Invoke(this, new(player));
         }
 
-        public event EventHandler<PlayerCreatedEventArgs> NavigateToGameBoard;
+        private event EventHandler<PlayerCreatedEventArgs> NavigateToGameBoard;
     }
 }

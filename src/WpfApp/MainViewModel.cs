@@ -1,4 +1,7 @@
+using System;
 using Core;
+using WpfApp.ConnectToGame;
+using WpfApp.CreateGame;
 using WpfApp.GameBoard;
 using WpfApp.GameStart;
 using WpfApp.SelectConnectionMethod;
@@ -8,7 +11,9 @@ namespace WpfApp {
     public class MainViewModel : ViewModel {
         public MainViewModel() {
             SetGameStart();
+#if DEBUG
             SetGameBoard(null, new(new("Максим", "Жуков")));
+#endif
         }
 
         private ViewModel _currentViewModel;
@@ -27,6 +32,12 @@ namespace WpfApp {
             CurrentViewModel = new GameBoardViewModel(_player = e.Player, SetSelectConnectionMethod);
 
         private void SetSelectConnectionMethod(object sender, ShipsCreatedEventArgs e) =>
-            CurrentViewModel = new SelectConnectionMethodViewModel(_player);
+            CurrentViewModel = new SelectConnectionMethodViewModel(SetNavigateToCreateGame, SetNavigateToConnectToGame);
+
+        private void SetNavigateToCreateGame(object sender, EventArgs e) =>
+            CurrentViewModel = new CreateGameViewModel(_player);
+
+        private void SetNavigateToConnectToGame(object sender, EventArgs e) =>
+            CurrentViewModel = new ConnectToGameViewModel();
     }
 }
