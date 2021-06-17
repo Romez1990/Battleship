@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:gb="clr-namespace:WpfApp.GameBattlefield"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel>
+    <StackPanel Margin="16">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="30" />
@@ -20,35 +21,24 @@
                        Grid.Column="0"
                        Grid.ColumnSpan="2"
                        HorizontalAlignment="Left"
+                       FontSize="20"
                        Text="{Binding Player}" />
             <TextBlock Grid.Row="0"
                        Grid.Column="0"
                        Grid.ColumnSpan="2"
                        HorizontalAlignment="Center"
+                       FontSize="20"
                        Text="{Binding Score}" />
             <TextBlock Grid.Row="0"
                        Grid.Column="0"
                        Grid.ColumnSpan="2"
                        HorizontalAlignment="Right"
+                       FontSize="20"
                        Text="{Binding Enemy}" />
 
-            <ItemsControl Grid.Row="1" Grid.Column="0">
-                <ItemsControl.Resources>
-                    <CollectionViewSource x:Key="ViewModelShips" Source="{Binding PlayerBattlefield.ShipRectangles}" />
-                    <CollectionViewSource x:Key="ViewModelGrid" Source="{Binding PlayerBattlefield.Grid}" />
-                </ItemsControl.Resources>
-
-                <ItemsControl.ItemsSource>
-                    <CompositeCollection>
-                        <CollectionContainer Collection="{Binding Source={StaticResource ViewModelShips}}" />
-                        <CollectionContainer Collection="{Binding Source={StaticResource ViewModelGrid}}" />
-                        <!-- <CollectionContainer> -->
-                        <!-- <CollectionContainer.Collection> -->
-                        <!-- <CollectionViewSource Source="{Binding Ships}"/> -->
-                        <!-- </CollectionContainer.Collection> -->
-                        <!-- </CollectionContainer> -->
-                    </CompositeCollection>
-                </ItemsControl.ItemsSource>
+            <ItemsControl Grid.Row="1"
+                          Grid.Column="0"
+                          ItemsSource="{Binding PlayerBattlefield.GraphicObjects}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <Canvas Width="{Binding PlayerBattlefield.FieldSize.X}"
@@ -63,34 +53,27 @@
                         <Setter Property="Height" Value="{Binding Height}" />
                     </Style>
                 </ItemsControl.ItemContainerStyle>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Rectangle Fill="{Binding Color}">
-                            <Rectangle.LayoutTransform>
-                                <RotateTransform Angle="{Binding Angle}"/>
-                            </Rectangle.LayoutTransform>
-                        </Rectangle>
+                <ItemsControl.Resources>
+                    <DataTemplate DataType="{x:Type gb:GridRectangle}">
+                        <Rectangle Fill="Black" />
                     </DataTemplate>
-                </ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type gb:RowLabel}">
+                        <Border BorderBrush="{x:Null}">
+                            <TextBlock TextAlignment="{Binding HorizontalAlignment}"
+                                       VerticalAlignment="{Binding VerticalAlignment}"
+                                       FontSize="20"
+                                       Text="{Binding Label}" />
+                        </Border>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type gb:ShipRectangle}">
+                        <Rectangle Fill="Blue" />
+                    </DataTemplate>
+                </ItemsControl.Resources>
             </ItemsControl>
 
-            <ItemsControl Grid.Row="1" Grid.Column="1">
-                <ItemsControl.Resources>
-                    <CollectionViewSource x:Key="ViewModelShips" Source="{Binding EnemyBattlefield.ShipRectangles}" />
-                    <CollectionViewSource x:Key="ViewModelGrid" Source="{Binding EnemyBattlefield.Grid}" />
-                </ItemsControl.Resources>
-
-                <ItemsControl.ItemsSource>
-                    <CompositeCollection>
-                        <CollectionContainer Collection="{Binding Source={StaticResource ViewModelShips}}" />
-                        <CollectionContainer Collection="{Binding Source={StaticResource ViewModelGrid}}" />
-                        <!-- <CollectionContainer> -->
-                        <!-- <CollectionCont/ainer.Collection> -->
-                        <!-- <CollectionViewSource Source="{Binding Ships}"/> -->
-                        <!-- </CollectionContainer.Collection> -->
-                        <!-- </CollectionContainer> -->
-                    </CompositeCollection>
-                </ItemsControl.ItemsSource>
+            <ItemsControl Grid.Row="1"
+                          Grid.Column="1"
+                          ItemsSource="{Binding EnemyBattlefield.GraphicObjects}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <Canvas Width="{Binding EnemyBattlefield.FieldSize.X}"
@@ -105,11 +88,22 @@
                         <Setter Property="Height" Value="{Binding Height}" />
                     </Style>
                 </ItemsControl.ItemContainerStyle>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Rectangle Fill="{Binding Color}" />
+                <ItemsControl.Resources>
+                    <DataTemplate DataType="{x:Type gb:GridRectangle}">
+                        <Rectangle Fill="Black" />
                     </DataTemplate>
-                </ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type gb:RowLabel}">
+                        <Border BorderBrush="{x:Null}">
+                            <TextBlock TextAlignment="{Binding HorizontalAlignment}"
+                                       VerticalAlignment="{Binding VerticalAlignment}"
+                                       FontSize="20"
+                                       Text="{Binding Label}" />
+                        </Border>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type gb:ShipRectangle}">
+                        <Rectangle Fill="Blue" />
+                    </DataTemplate>
+                </ItemsControl.Resources>
             </ItemsControl>
         </Grid>
     </StackPanel>

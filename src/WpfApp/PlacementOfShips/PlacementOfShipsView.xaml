@@ -7,7 +7,8 @@
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="500">
     <StackPanel VerticalAlignment="Center" Margin="16">
-        <TextBlock Text="{Binding Player}" />
+        <TextBlock FontSize="20"
+                   Text="{Binding Player}" />
         <Button HorizontalAlignment="Center"
                 Margin="5"
                 Command="{Binding Random}"
@@ -16,7 +17,8 @@
         <ItemsControl ItemsSource="{Binding Battlefield.GraphicObjects}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <Canvas Width="{Binding Battlefield.FieldSize.X}" Height="{Binding Battlefield.FieldSize.Y}" />
+                    <Canvas Width="{Binding Battlefield.FieldSize.X}"
+                            Height="{Binding Battlefield.FieldSize.Y}" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemContainerStyle>
@@ -30,6 +32,14 @@
             <ItemsControl.Resources>
                 <DataTemplate DataType="{x:Type gb:GridRectangle}">
                     <Rectangle Fill="Black" />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type gb:RowLabel}">
+                    <Border BorderBrush="{x:Null}">
+                        <TextBlock TextAlignment="{Binding HorizontalAlignment}"
+                                   VerticalAlignment="{Binding VerticalAlignment}"
+                                   FontSize="20"
+                                   Text="{Binding Label}" />
+                    </Border>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type gb:ShipRectangle}">
                     <Rectangle Fill="Blue" />

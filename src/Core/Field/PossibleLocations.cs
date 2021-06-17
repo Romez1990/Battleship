@@ -29,7 +29,7 @@ namespace Core.Field {
             CreatePossibleLocations(Field.Size - new Vector(0, _shipSize - 1));
 
         private List<Vector> CreatePossibleLocations(Vector size) {
-            var row = Enumerable.Range(0, size.X);
+            var row = Enumerable.Range(0, size.X).ToImmutableArray();
             return Enumerable.Range(0, size.Y)
                 .Map(y => row.Map(x => new Vector(x, y)))
                 .Flatten()
@@ -37,13 +37,13 @@ namespace Core.Field {
         }
 
         private void RemoveShipLocations(IEnumerable<Ship> ships) {
-            var shipBorders = ships.Map(ship => new ShipBorder(ship)).ToList();
+            var shipBorders = ships.Map(ship => new ShipBorder(ship)).ToImmutableArray();
             RemoveShipLocationsFromPossibleLocations(_possibleHorizontalLocations, shipBorders);
             RemoveShipLocationsFromPossibleLocations(_possibleVerticalLocations, shipBorders);
         }
 
         private void RemoveShipLocationsFromPossibleLocations(List<Vector> possibleLocations,
-            List<ShipBorder> shipBorders) {
+            ImmutableArray<ShipBorder> shipBorders) {
             possibleLocations.RemoveAll(coordinates =>
                 shipBorders.Any(shipBorder => shipBorder.Collides(coordinates)));
         }
@@ -53,7 +53,7 @@ namespace Core.Field {
             var possibleLocations = GetPossibleLocations(orientation);
             var coordinates = GetRandomCoordinates(possibleLocations);
             var ship = new Ship(coordinates, _shipSize, orientation);
-            RemoveShipLocations(new[] {ship});
+            RemoveShipLocations(new[] { ship });
             return ship;
         }
 
