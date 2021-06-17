@@ -2,11 +2,12 @@
 using System.Linq;
 using Core;
 using Core.Field;
+using WpfApp.GameBattlefield;
 using WpfApp.Toolkit;
 
-namespace WpfApp.GameBattlefield {
-    public class BattlefieldViewModel : ViewModel {
-        public BattlefieldViewModel(Player player, Player enemy, ImmutableArray<Ship> ships) {
+namespace WpfApp.GameSession {
+    public class GameSessionViewModel : ViewModel {
+        public GameSessionViewModel(Player player, Player enemy, ImmutableArray<Ship> ships) {
             Player = player;
             Enemy = enemy;
             Ships = ships;

@@ -2,9 +2,9 @@ using System.Collections.Immutable;
 using Core;
 using Core.Field;
 using Core.Session;
-using WpfApp.GameBattlefield;
-using WpfApp.GameBoard;
+using WpfApp.GameSession;
 using WpfApp.GameStart;
+using WpfApp.PlacementOfShips;
 using WpfApp.SelectConnectionMethod;
 using WpfApp.Toolkit;
 
@@ -45,10 +45,10 @@ namespace WpfApp {
         private void SetGameBoard(object sender, PlayerCreatedEventArgs e) =>
             CurrentViewModel = new GameBoardViewModel(_player = e.Player, SetSelectConnectionMethod);
 
-        private void SetSelectConnectionMethod(object sender, ShipsCreatedEventArgs e) =>
+        private void SetSelectConnectionMethod(object sender, ShipsPlacedEventArgs e) =>
             CurrentViewModel = new SelectConnectionMethodViewModel(_player, _ships = e.Ships, SetGameSession);
 
         private void SetGameSession(object sender, GameCreatedEventArgs e) =>
-            CurrentViewModel = new BattlefieldViewModel(_player, _enemy = e.Enemy, _ships);
+            CurrentViewModel = new GameSessionViewModel(_player, _enemy = e.Enemy, _ships);
     }
 }

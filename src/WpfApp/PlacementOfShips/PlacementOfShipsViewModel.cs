@@ -5,9 +5,9 @@ using Core.Field;
 using WpfApp.GameBattlefield;
 using WpfApp.Toolkit;
 
-namespace WpfApp.GameBoard {
+namespace WpfApp.PlacementOfShips {
     public class GameBoardViewModel : ViewModel {
-        public GameBoardViewModel(Player player, EventHandler<ShipsCreatedEventArgs> navigateToSelectConnectionMethod) {
+        public GameBoardViewModel(Player player, EventHandler<ShipsPlacedEventArgs> navigateToSelectConnectionMethod) {
             Player = player;
             NavigateToSelectConnectionMethod += navigateToSelectConnectionMethod;
 
@@ -40,6 +40,6 @@ namespace WpfApp.GameBoard {
         private void OnStepNext() =>
             NavigateToSelectConnectionMethod?.Invoke(this, new(_ships));
 
-        private event EventHandler<ShipsCreatedEventArgs> NavigateToSelectConnectionMethod;
+        private event EventHandler<ShipsPlacedEventArgs> NavigateToSelectConnectionMethod;
     }
 }

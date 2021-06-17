@@ -6,9 +6,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:gs="clr-namespace:WpfApp.GameStart"
-        xmlns:gb="clr-namespace:WpfApp.GameBoard"
+        xmlns:ps="clr-namespace:WpfApp.PlacementOfShips"
         xmlns:sc="clr-namespace:WpfApp.SelectConnectionMethod"
-        xmlns:gbf="clr-namespace:WpfApp.GameBattlefield"
+        xmlns:gss="clr-namespace:WpfApp.GameSession"
         xmlns:local="clr-namespace:WpfApp"
         mc:Ignorable="d"
         Title="MainWindow"
@@ -31,16 +31,16 @@
             <gs:GameStartView />
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type gb:GameBoardViewModel}">
-            <gb:GameBoardView />
+        <DataTemplate DataType="{x:Type ps:GameBoardViewModel}">
+            <ps:GameBoardView />
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type sc:SelectConnectionMethodViewModel}">
             <sc:SelectConnectionMethodView />
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type gbf:BattlefieldViewModel}">
-            <gbf:CreateGameView />
+        <DataTemplate DataType="{x:Type gss:GameSessionViewModel}">
+            <gss:CreateGameView />
         </DataTemplate>
 
         <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">

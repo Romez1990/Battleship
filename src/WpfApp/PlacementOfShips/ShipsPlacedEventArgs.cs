@@ -2,9 +2,9 @@
 using System.Collections.Immutable;
 using Core.Field;
 
-namespace WpfApp.GameBoard {
-    public class ShipsCreatedEventArgs : EventArgs {
-        public ShipsCreatedEventArgs(ImmutableArray<Ship> ships) {
+namespace WpfApp.PlacementOfShips {
+    public class ShipsPlacedEventArgs : EventArgs {
+        public ShipsPlacedEventArgs(ImmutableArray<Ship> ships) {
             Ships = ships;
         }
 

@@ -1,6 +1,6 @@
 ﻿using WpfApp.Toolkit;
 
-namespace WpfApp.GameBattlefield {
+namespace WpfApp.GameSession {
     public class Score : Bindable {
         private int _player = 0;
         private int _enemy = 0;

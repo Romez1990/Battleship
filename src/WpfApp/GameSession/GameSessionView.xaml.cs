@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace WpfApp.GameBattlefield {
+namespace WpfApp.GameSession {
     /// <summary>
     /// Interaction logic for CreateGameView.xaml
     /// </summary>

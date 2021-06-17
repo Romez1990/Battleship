@@ -1,6 +1,6 @@
 using System.Windows.Controls;
 
-namespace WpfApp.GameBoard {
+namespace WpfApp.PlacementOfShips {
     /// <summary>
     /// Interaction logic for GameBoardView.xaml
     /// </summary>
