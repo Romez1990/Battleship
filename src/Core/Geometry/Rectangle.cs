@@ -7,6 +7,9 @@ namespace Core.Geometry {
         public int Width => Size.X;
         public int Height => Size.Y;
 
+        public Rectangle StretchStart(Vector size) =>
+            new(Coordinates - size, Size + size);
+
         public bool Collides(Rectangle other) {
             var collidesOnX = Coordinates.X < other.EndCoordinates.X && other.Coordinates.X < EndCoordinates.X;
             var collidesOnY = Coordinates.Y < other.EndCoordinates.Y && other.Coordinates.Y < EndCoordinates.Y;

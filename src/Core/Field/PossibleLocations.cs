@@ -38,14 +38,14 @@ namespace Core.Field {
 
         private void RemoveShipLocations(IEnumerable<Ship> ships) {
             var shipBorders = ships.Map(ship => new ShipBorder(ship)).ToImmutableArray();
-            RemoveShipLocationsFromPossibleLocations(_possibleHorizontalLocations, shipBorders);
-            RemoveShipLocationsFromPossibleLocations(_possibleVerticalLocations, shipBorders);
+            RemoveShipLocationsFromPossibleLocations(_possibleHorizontalLocations, shipBorders, new(_shipSize, 0));
+            RemoveShipLocationsFromPossibleLocations(_possibleVerticalLocations, shipBorders, new(0, _shipSize));
         }
 
         private void RemoveShipLocationsFromPossibleLocations(List<Vector> possibleLocations,
-            ImmutableArray<ShipBorder> shipBorders) {
+            ImmutableArray<ShipBorder> shipBorders, Vector stretchSize) {
             possibleLocations.RemoveAll(coordinates =>
-                shipBorders.Any(shipBorder => shipBorder.Collides(coordinates)));
+                shipBorders.Any(shipBorder => shipBorder.StretchStart(stretchSize).Collides(coordinates)));
         }
 
         public Ship GetRandomShip() {
