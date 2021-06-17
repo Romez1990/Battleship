@@ -12,8 +12,6 @@ namespace WpfApp.GameBattlefield {
         public Battlefield(IEnumerable<Ship> ships) {
             FieldSize = Field.Size.Map(CalculateOffset) + GridThickness;
 
-            // var shipsList = ships.ToList();
-            // _ships = new(shipsList);
             GraphicObjects = new() {
                 new CollectionContainer { Collection = CreateGridLines() },
                 new CollectionContainer { Collection = _shipRectangles = new(ships.Map(ToShipRectangle)) },
@@ -37,15 +35,12 @@ namespace WpfApp.GameBattlefield {
                 .Map(CalculateOffset)
                 .Map(offset => new GridRectangle(orientation, offset, CalculateOffset(count), GridThickness));
 
-        // private readonly ObservableCollection<Ship> _ships;
-
         private readonly ObservableCollection<ShipRectangle> _shipRectangles;
 
         private ShipRectangle ToShipRectangle(Ship ship) =>
             new(ship, CalculateOffset);
 
         public void AddShip(Ship ship) {
-            // _ships.Add(ship);
             _shipRectangles.Add(ToShipRectangle(ship));
         }
 
