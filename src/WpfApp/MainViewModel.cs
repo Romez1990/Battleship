@@ -22,7 +22,9 @@ namespace WpfApp {
             // SetSelectConnectionMethod(null, new(_ships));
             // ((SelectConnectionMethodViewModel)CurrentViewModel).CreateGame.Execute(null);
 
-            SetGameSession(this, new(_player));
+            // SetGameSession(this, new(_player));
+
+            SetGameBoard(this, new(_player));
 #endif
         }
 
