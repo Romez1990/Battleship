@@ -37,7 +37,8 @@ namespace Core.Session {
 
         private event EventHandler<GameCreatedEventArgs> GameCreated;
 
-        public async Task<ConnectionToGameResult> ConnectToGame(Player player, ImmutableArray<Ship> ships, string connectionCode) {
+        public async Task<ConnectionToGameResult> ConnectToGame(Player player, ImmutableArray<Ship> ships,
+            string connectionCode) {
             var completionSource = new TaskCompletionSource<ConnectionToGameResult>();
             _socket.MessageReceived.Subscribe(msg => {
                 var connectionToGameResult = _serializer.Deserialize<ConnectionToGameResult>(msg.Text);

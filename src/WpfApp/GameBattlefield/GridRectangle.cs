@@ -4,7 +4,8 @@ using Core.Geometry;
 
 namespace WpfApp.GameBattlefield {
     public record GridRectangle : Rectangle {
-        public GridRectangle(int i, Orientation orientation, int length, int thickness, Func<int, int> calculateOffset) : base(
+        public GridRectangle(int i, Orientation orientation, int length, int thickness,
+            Func<int, int> calculateOffset) : base(
             orientation switch {
                 Orientation.Horizontal => new(calculateOffset(0), calculateOffset(i)),
                 Orientation.Vertical => new(calculateOffset(i), calculateOffset(0)),

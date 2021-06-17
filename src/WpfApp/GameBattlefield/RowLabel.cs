@@ -6,7 +6,8 @@ using Vector = Core.Geometry.Vector;
 
 namespace WpfApp.GameBattlefield {
     public record RowLabel : Rectangle {
-        public RowLabel(string label, int i, Orientation orientation, int size, int margin, Func<int, int> calculateOffset) : base(
+        public RowLabel(string label, int i, Orientation orientation, int size, int margin,
+            Func<int, int> calculateOffset) : base(
             orientation switch {
                 Orientation.Horizontal => new Vector(0, calculateOffset(i)),
                 Orientation.Vertical => new Vector(calculateOffset(i), 0),

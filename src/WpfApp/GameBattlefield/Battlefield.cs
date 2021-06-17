@@ -46,7 +46,8 @@ namespace WpfApp.GameBattlefield {
 
         private IEnumerable<RowLabel> CreateRowLabelsInRow(int count, Orientation orientation) =>
             Enumerable.Range(0, count)
-                .Map(i => new RowLabel(GetLabel(i, orientation), i, orientation, LabelSize, LabelMargin, CalculateOffset));
+                .Map(i => new RowLabel(GetLabel(i, orientation), i, orientation, LabelSize, LabelMargin,
+                    CalculateOffset));
 
         private string GetLabel(int i, Orientation orientation) =>
             orientation switch {

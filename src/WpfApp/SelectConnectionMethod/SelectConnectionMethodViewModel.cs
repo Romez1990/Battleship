@@ -68,7 +68,7 @@ namespace WpfApp.SelectConnectionMethod {
 
             Errors[nameof(InputGameCode)] = isConnected
                 ? Enumerable.Empty<string>().ToImmutableArray()
-                : new[] {"Неверный код"}.ToImmutableArray();
+                : new[] { "Неверный код" }.ToImmutableArray();
         }
 
         private event EventHandler<GameCreatedEventArgs> NavigateToGame;
