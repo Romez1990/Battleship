@@ -37,7 +37,7 @@
                     <Border BorderBrush="{x:Null}">
                         <TextBlock TextAlignment="{Binding HorizontalAlignment}"
                                    VerticalAlignment="{Binding VerticalAlignment}"
-                                   FontSize="20"
+                                   FontSize="18"
                                    Text="{Binding Label}" />
                     </Border>
                 </DataTemplate>
