@@ -2,6 +2,7 @@ using System;
 using System.Collections.Immutable;
 using Core;
 using Core.Field;
+using Core.PlayerData;
 using WpfApp.GameBattlefield;
 using WpfApp.Toolkit;
 

@@ -3,10 +3,12 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Core.Field;
+using Core.Geometry;
+using Core.PlayerData;
 using Core.Serializers;
 using Websocket.Client;
 
-namespace Core.Session {
+namespace Core.Connection {
     public class PlayerConnector {
         public PlayerConnector(IJsonSerializer serializer, EventHandler<GameCreatedEventArgs> gameCreated) {
             _serializer = serializer;
@@ -36,7 +38,9 @@ namespace Core.Session {
                         completionSource.SetResult(connectionCode);
                         break;
                     case "game_connected":
-                        var enemy = _serializer.DeserializeObject<ConnectionToGameResult>(connectionResult).Enemy;
+                        var result = _serializer.DeserializeObject<ConnectionToGameResult>(connectionResult);
+                        var enemy = result.Enemy;
+                        IsPlayerGoing = result.Go;
                         subscription.Dispose();
                         GameCreated?.Invoke(this, new(this, enemy));
                         break;
@@ -60,6 +64,7 @@ namespace Core.Session {
             subscription = _socket.MessageReceived.Subscribe(msg => {
                 var connectionToGameResult = _serializer.Deserialize<ConnectionToGameResult>(msg.Text);
                 subscription.Dispose();
+                IsPlayerGoing = connectionToGameResult.Go;
                 completionSource.SetResult(connectionToGameResult);
             });
             await Connect();
@@ -67,6 +72,11 @@ namespace Core.Session {
             var text = _serializer.Serialize(message);
             _socket.Send(text);
             return await completionSource.Task;
+        }
+
+        public bool IsPlayerGoing { get; set; }
+
+        public void Go(Vector coordinates) {
         }
     }
 }

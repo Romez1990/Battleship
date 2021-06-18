@@ -3,9 +3,10 @@ using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Core;
+using Core.Connection;
 using Core.Field;
+using Core.PlayerData;
 using Core.Serializers;
-using Core.Session;
 using WpfApp.Toolkit;
 
 namespace WpfApp.SelectConnectionMethod {
@@ -62,11 +63,11 @@ namespace WpfApp.SelectConnectionMethod {
             NavigateToGame?.Invoke(this, e);
 
         protected override async void OnSubmit() {
-            var (isConnected, player) = await _playerConnector.ConnectToGame(_player, _ships, InputGameCode);
-            if (isConnected)
-                GameCreated(this, new(_playerConnector, player));
+            var connectionResult = await _playerConnector.ConnectToGame(_player, _ships, InputGameCode);
+            if (connectionResult.IsConnected)
+                GameCreated(this, new(_playerConnector, connectionResult.Enemy));
 
-            Errors[nameof(InputGameCode)] = isConnected
+            Errors[nameof(InputGameCode)] = connectionResult.IsConnected
                 ? Enumerable.Empty<string>().ToImmutableArray()
                 : new[] { "Неверный код" }.ToImmutableArray();
         }

@@ -1,6 +1,6 @@
 ﻿using Core.Sockets;
 
-namespace Core.Session {
+namespace Core.Connection {
     public record ConnectToGameMessage : Message<PlayerData> {
         public ConnectToGameMessage(PlayerData playerData) : base(Type, playerData) { }
 

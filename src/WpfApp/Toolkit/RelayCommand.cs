@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Input;
 
-namespace WpfApp {
+namespace WpfApp.Toolkit {
     public class RelayCommand : ICommand {
         public RelayCommand(Action method, Func<bool> canExecuteMethod = null) {
             _method = method;

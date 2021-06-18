@@ -4,9 +4,9 @@ using Core.Geometry;
 
 namespace WpfApp.GameBattlefield {
     public record ShipRectangle : Rectangle {
-        public ShipRectangle(Ship ship, int cellSize, Func<int, int> calculateOffset) : base(
+        public ShipRectangle(Ship ship, int cellSize, int gridThickness, Func<int, int> calculateOffset) : base(
             ship.Coordinates.Map(calculateOffset),
-            new ShipSize(ship).Map(calculateOffset) - calculateOffset(0)
+            new ShipSize(ship) * (cellSize + gridThickness) - gridThickness
         ) { }
     }
 }

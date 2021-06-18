@@ -1,8 +1,9 @@
 using System.Collections.Immutable;
 using Core;
+using Core.Connection;
 using Core.Field;
+using Core.PlayerData;
 using Core.Serializers;
-using Core.Session;
 using WpfApp.GameSession;
 using WpfApp.GameStart;
 using WpfApp.PlacementOfShips;

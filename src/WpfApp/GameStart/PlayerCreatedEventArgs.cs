@@ -1,5 +1,6 @@
 ﻿using System;
 using Core;
+using Core.PlayerData;
 
 namespace WpfApp.GameStart {
     public class PlayerCreatedEventArgs : EventArgs {

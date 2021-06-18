@@ -1,6 +1,7 @@
 ﻿using System;
+using Core.PlayerData;
 
-namespace Core.Session {
+namespace Core.Connection {
     public class GameCreatedEventArgs : EventArgs {
         public GameCreatedEventArgs(PlayerConnector playerConnector, Player enemy) {
             PlayerConnector = playerConnector;

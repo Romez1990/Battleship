@@ -3,12 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:gb="clr-namespace:WpfApp.GameBattlefield"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel Margin="16">
         <Grid>
             <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
                 <RowDefinition Height="30" />
                 <RowDefinition />
             </Grid.RowDefinitions>
@@ -35,8 +37,14 @@
                        HorizontalAlignment="Right"
                        FontSize="20"
                        Text="{Binding Enemy}" />
+            <TextBlock Grid.Row="1"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2"
+                       HorizontalAlignment="Center"
+                       FontSize="20"
+                       Text="{Binding WhoIsGoing}" />
 
-            <ItemsControl Grid.Row="1"
+            <ItemsControl Grid.Row="2"
                           Grid.Column="0"
                           ItemsSource="{Binding PlayerBattlefield.GraphicObjects}">
                 <ItemsControl.ItemsPanel>
@@ -54,6 +62,9 @@
                     </Style>
                 </ItemsControl.ItemContainerStyle>
                 <ItemsControl.Resources>
+                    <DataTemplate DataType="{x:Type gb:BackgroundRectangle}">
+                        <Rectangle Fill="White" />
+                    </DataTemplate>
                     <DataTemplate DataType="{x:Type gb:GridRectangle}">
                         <Rectangle Fill="Black" />
                     </DataTemplate>
@@ -68,16 +79,44 @@
                     <DataTemplate DataType="{x:Type gb:ShipRectangle}">
                         <Rectangle Fill="Blue" />
                     </DataTemplate>
+                    <DataTemplate DataType="{x:Type gb:CrossRectangle}">
+                        <Grid>
+                            <Rectangle Height="{Binding Length}"
+                                       Width="{Binding Thickness}"
+                                       Fill="Red">
+                                <Rectangle.LayoutTransform>
+                                    <RotateTransform Angle="45" />
+                                </Rectangle.LayoutTransform>
+                            </Rectangle>
+                            <Rectangle Height="{Binding Length}"
+                                       Width="{Binding Thickness}"
+                                       Fill="Red">
+                                <Rectangle.LayoutTransform>
+                                    <RotateTransform Angle="-45" />
+                                </Rectangle.LayoutTransform>
+                            </Rectangle>
+                        </Grid>
+                    </DataTemplate>
                 </ItemsControl.Resources>
             </ItemsControl>
 
-            <ItemsControl Grid.Row="1"
+            <ItemsControl Grid.Row="2"
                           Grid.Column="1"
                           ItemsSource="{Binding EnemyBattlefield.GraphicObjects}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <Canvas Width="{Binding EnemyBattlefield.FieldSize.X}"
-                                Height="{Binding EnemyBattlefield.FieldSize.Y}" />
+                                Height="{Binding EnemyBattlefield.FieldSize.Y}">
+                            <i:Interaction.Behaviors>
+                                <gb:MouseBehaviour MouseX="{Binding EnemyCanvasPositionX, Mode=OneWayToSource}"
+                                                   MouseY="{Binding EnemyCanvasPositionY, Mode=OneWayToSource}" />
+                            </i:Interaction.Behaviors>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseLeftButtonUp">
+                                    <i:InvokeCommandAction Command="{Binding EnemyCanvasClick}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Canvas>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemContainerStyle>
@@ -89,6 +128,9 @@
                     </Style>
                 </ItemsControl.ItemContainerStyle>
                 <ItemsControl.Resources>
+                    <DataTemplate DataType="{x:Type gb:BackgroundRectangle}">
+                        <Rectangle Fill="White" />
+                    </DataTemplate>
                     <DataTemplate DataType="{x:Type gb:GridRectangle}">
                         <Rectangle Fill="Black" />
                     </DataTemplate>
@@ -102,6 +144,24 @@
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type gb:ShipRectangle}">
                         <Rectangle Fill="Blue" />
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type gb:CrossRectangle}">
+                        <Grid>
+                            <Rectangle Height="{Binding Length}"
+                                       Width="{Binding Thickness}"
+                                       Fill="Red">
+                                <Rectangle.LayoutTransform>
+                                    <RotateTransform Angle="45" />
+                                </Rectangle.LayoutTransform>
+                            </Rectangle>
+                            <Rectangle Height="{Binding Length}"
+                                       Width="{Binding Thickness}"
+                                       Fill="Red">
+                                <Rectangle.LayoutTransform>
+                                    <RotateTransform Angle="-45" />
+                                </Rectangle.LayoutTransform>
+                            </Rectangle>
+                        </Grid>
                     </DataTemplate>
                 </ItemsControl.Resources>
             </ItemsControl>
