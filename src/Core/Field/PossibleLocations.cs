@@ -38,8 +38,8 @@ namespace Core.Field {
 
         private void RemoveShipLocations(IEnumerable<Ship> ships) {
             var shipBorders = ships.Map(ship => new ShipBorder(ship)).ToImmutableArray();
-            RemoveShipLocationsFromPossibleLocations(_possibleHorizontalLocations, shipBorders, new(_shipSize, 0));
-            RemoveShipLocationsFromPossibleLocations(_possibleVerticalLocations, shipBorders, new(0, _shipSize));
+            RemoveShipLocationsFromPossibleLocations(_possibleHorizontalLocations, shipBorders, new(_shipSize - 1, 0));
+            RemoveShipLocationsFromPossibleLocations(_possibleVerticalLocations, shipBorders, new(0, _shipSize - 1));
         }
 
         private void RemoveShipLocationsFromPossibleLocations(List<Vector> possibleLocations,

@@ -24,9 +24,18 @@ namespace Core.Session {
         public async Task<ConnectionCode> CreateGame(Player player, ImmutableArray<Ship> ships) {
             var completionSource = new TaskCompletionSource<ConnectionCode>();
             _socket.MessageReceived.Subscribe(msg => {
-                var connectionCode = _serializer.Deserialize<ConnectionCode>(msg.Text);
-                completionSource.SetResult(new(connectionCode.Code));
-                // GameCreated?.Invoke(this, EventArgs.Empty);
+                var connectionResult = _serializer.DeserializeDynamic(msg.Text);
+                switch ((string)connectionResult["MessageType"]) {
+                    case "connection_code":
+                        completionSource.SetResult(new((string)connectionResult["Code"]));
+                        break;
+                    case "game_connected":
+                        var enemy = connectionResult.ToObject<ConnectionToGameResult>().Enemy;
+                        GameCreated?.Invoke(this, new(enemy));
+                        break;
+                    default:
+                        throw new("Unexpected message type");
+                }
             });
             await Connect();
             var message = new CreateGameMessage(new(player, ships, null));

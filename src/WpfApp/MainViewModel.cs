@@ -13,10 +13,10 @@ namespace WpfApp {
         public MainViewModel() {
             SetGameStart();
 #if DEBUG
-            _player = new("Максим", "Жуков");
-            _ships = new RandomShipPlacement().GetShips();
+            // _player = new("Максим", "Жуков");
+            // _ships = new RandomShipPlacement().GetShips();
 
-            SetGameBoard(this, new(_player));
+            // SetPlacementOfShips(this, new(_player));
 
             // SetGameSession(this, new(_player));
 #endif
@@ -34,10 +34,10 @@ namespace WpfApp {
         private ImmutableArray<Ship> _ships;
 
         private void SetGameStart() =>
-            _currentViewModel = new GameStartViewModel(SetGameBoard);
+            _currentViewModel = new GameStartViewModel(SetPlacementOfShips);
 
-        private void SetGameBoard(object sender, PlayerCreatedEventArgs e) =>
-            CurrentViewModel = new GameBoardViewModel(_player = e.Player, SetSelectConnectionMethod);
+        private void SetPlacementOfShips(object sender, PlayerCreatedEventArgs e) =>
+            CurrentViewModel = new PlacementOfShipsViewModel(_player = e.Player, SetSelectConnectionMethod);
 
         private void SetSelectConnectionMethod(object sender, ShipsPlacedEventArgs e) =>
             CurrentViewModel = new SelectConnectionMethodViewModel(_player, _ships = e.Ships, SetGameSession);

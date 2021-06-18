@@ -6,8 +6,8 @@ using WpfApp.GameBattlefield;
 using WpfApp.Toolkit;
 
 namespace WpfApp.PlacementOfShips {
-    public class GameBoardViewModel : ViewModel {
-        public GameBoardViewModel(Player player, EventHandler<ShipsPlacedEventArgs> navigateToSelectConnectionMethod) {
+    public class PlacementOfShipsViewModel : ViewModel {
+        public PlacementOfShipsViewModel(Player player, EventHandler<ShipsPlacedEventArgs> navigateToSelectConnectionMethod) {
             Player = player;
             NavigateToSelectConnectionMethod += navigateToSelectConnectionMethod;
 

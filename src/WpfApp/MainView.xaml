@@ -31,7 +31,7 @@
             <gs:GameStartView />
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type ps:GameBoardViewModel}">
+        <DataTemplate DataType="{x:Type ps:PlacementOfShipsViewModel}">
             <ps:GameBoardView />
         </DataTemplate>
 
