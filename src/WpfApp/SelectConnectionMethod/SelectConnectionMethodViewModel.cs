@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using Core.Connection;
 using Core.Field;
 using Core.PlayerData;
