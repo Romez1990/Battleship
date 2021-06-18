@@ -1,9 +1,7 @@
 using System.Collections.Immutable;
-using Core;
 using Core.Connection;
 using Core.Field;
 using Core.PlayerData;
-using Core.Serializers;
 using WpfApp.GameSession;
 using WpfApp.GameStart;
 using WpfApp.PlacementOfShips;
@@ -20,9 +18,9 @@ namespace WpfApp {
 
             // SetPlacementOfShips(this, new(_player));
 
-            // SetSelectConnectionMethod(this, new(_ships));
+            SetSelectConnectionMethod(this, new(_ships));
 
-            SetGameSession(this, new(new(new JsonSerializer(), (sender, args) => { }), _player));
+            // SetGameSession(this, new(null, true, _player));
 #endif
         }
 
@@ -36,7 +34,6 @@ namespace WpfApp {
         private Player _player;
         private Player _enemy;
         private ImmutableArray<Ship> _ships;
-        private PlayerConnector _playerConnector;
 
         private void SetGameStart() =>
             _currentViewModel = new GameStartViewModel(SetPlacementOfShips);
@@ -48,6 +45,6 @@ namespace WpfApp {
             CurrentViewModel = new SelectConnectionMethodViewModel(_player, _ships = e.Ships, SetGameSession);
 
         private void SetGameSession(object sender, GameCreatedEventArgs e) =>
-            CurrentViewModel = new GameSessionViewModel(_playerConnector = e.PlayerConnector, _player, _enemy = e.Enemy, _ships);
+            CurrentViewModel = new GameSessionViewModel(e.Socket, _player, _enemy = e.Enemy, _ships);
     }
 }

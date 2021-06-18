@@ -3,15 +3,13 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Core.Field;
-using Core.Geometry;
 using Core.PlayerData;
 using Core.Serializers;
 using Websocket.Client;
 
 namespace Core.Connection {
     public class PlayerConnector {
-        public PlayerConnector(IJsonSerializer serializer, EventHandler<GameCreatedEventArgs> gameCreated) {
-            _serializer = serializer;
+        public PlayerConnector(EventHandler<GameCreatedEventArgs> gameCreated) {
             GameCreated += gameCreated;
             _socket = new(new("ws://127.0.0.1:8000/connect")) {
                 ReconnectTimeout = TimeSpan.FromSeconds(3000),
@@ -20,7 +18,7 @@ namespace Core.Connection {
                 Debug.Print($"Reconnection happened, type: {info.Type}"));
         }
 
-        private readonly IJsonSerializer _serializer;
+        private readonly IJsonSerializer _serializer = new JsonSerializer();
         private readonly WebsocketClient _socket;
 
         private async Task Connect() {
@@ -38,11 +36,9 @@ namespace Core.Connection {
                         completionSource.SetResult(connectionCode);
                         break;
                     case "game_connected":
-                        var result = _serializer.DeserializeObject<ConnectionToGameResult>(connectionResult);
-                        var enemy = result.Enemy;
-                        IsPlayerGoing = result.Go;
+                        var (_, enemy, isPlayerGoing) = _serializer.DeserializeObject<ConnectionToGameResult>(connectionResult);
                         subscription.Dispose();
-                        GameCreated?.Invoke(this, new(this, enemy));
+                        GameCreated?.Invoke(this, new(_socket, isPlayerGoing, enemy));
                         break;
                     default:
                         throw new("Unexpected message type");
@@ -62,9 +58,11 @@ namespace Core.Connection {
             var completionSource = new TaskCompletionSource<ConnectionToGameResult>();
             IDisposable subscription = null;
             subscription = _socket.MessageReceived.Subscribe(msg => {
-                var connectionToGameResult = _serializer.Deserialize<ConnectionToGameResult>(msg.Text);
                 subscription.Dispose();
-                IsPlayerGoing = connectionToGameResult.Go;
+                var connectionToGameResult = _serializer.Deserialize<ConnectionToGameResult>(msg.Text);
+                if (connectionToGameResult.IsConnected) {
+                    GameCreated?.Invoke(this, new(_socket, connectionToGameResult.Go, connectionToGameResult.Enemy));
+                }
                 completionSource.SetResult(connectionToGameResult);
             });
             await Connect();
@@ -72,11 +70,6 @@ namespace Core.Connection {
             var text = _serializer.Serialize(message);
             _socket.Send(text);
             return await completionSource.Task;
-        }
-
-        public bool IsPlayerGoing { get; set; }
-
-        public void Go(Vector coordinates) {
         }
     }
 }

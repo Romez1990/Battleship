@@ -2,11 +2,9 @@
 using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Core;
 using Core.Connection;
 using Core.Field;
 using Core.PlayerData;
-using Core.Serializers;
 using WpfApp.Toolkit;
 
 namespace WpfApp.SelectConnectionMethod {
@@ -16,7 +14,7 @@ namespace WpfApp.SelectConnectionMethod {
             _player = player;
             _ships = ships;
             NavigateToGame += navigateToGame;
-            _playerConnector = new(new JsonSerializer(), GameCreated);
+            _playerConnector = new(GameCreated);
             CreateGame = new(OnCreateGame, () => CanCreateGame);
         }
 
@@ -37,7 +35,6 @@ namespace WpfApp.SelectConnectionMethod {
 
         private string _createdInputGameCode = "";
 
-        [Required]
         public string CreatedGameCode {
             get => _createdInputGameCode == "" ? "" : $"Ваш код {_createdInputGameCode}";
             set => SetProperty(ref _createdInputGameCode, value);
@@ -64,12 +61,10 @@ namespace WpfApp.SelectConnectionMethod {
 
         protected override async void OnSubmit() {
             var connectionResult = await _playerConnector.ConnectToGame(_player, _ships, InputGameCode);
-            if (connectionResult.IsConnected)
-                GameCreated(this, new(_playerConnector, connectionResult.Enemy));
 
-            Errors[nameof(InputGameCode)] = connectionResult.IsConnected
-                ? Enumerable.Empty<string>().ToImmutableArray()
-                : new[] { "Неверный код" }.ToImmutableArray();
+            if (!connectionResult.IsConnected) {
+                SetError(nameof(InputGameCode), new[] { "Неверный код" });
+            }
         }
 
         private event EventHandler<GameCreatedEventArgs> NavigateToGame;

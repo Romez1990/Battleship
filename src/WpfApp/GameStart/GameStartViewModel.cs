@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using Core;
 using Core.PlayerData;
 using WpfApp.Toolkit;
 

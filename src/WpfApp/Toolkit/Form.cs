@@ -30,6 +30,7 @@ namespace WpfApp.Toolkit {
         public RelayCommand Submit { get; }
 
         private void OnSubmitCommand() {
+            ValidateAllProperties();
             if (!HasErrors) {
                 OnSubmit();
             }

@@ -1,17 +1,17 @@
 ﻿using System.Collections.Immutable;
 using System.Linq;
-using Core;
-using Core.Connection;
 using Core.Field;
+using Core.GameSession;
 using Core.PlayerData;
+using Websocket.Client;
 using WpfApp.GameBattlefield;
 using WpfApp.Toolkit;
 
 namespace WpfApp.GameSession {
     public class GameSessionViewModel : ViewModel {
-        public GameSessionViewModel(PlayerConnector playerConnector, Player player, Player enemy,
+        public GameSessionViewModel(WebsocketClient socket, Player player, Player enemy,
             ImmutableArray<Ship> ships) {
-            _playerConnector = playerConnector;
+            _session = new(socket);
             Player = player;
             Enemy = enemy;
             Ships = ships;
@@ -21,7 +21,7 @@ namespace WpfApp.GameSession {
             EnemyCanvasClick = new(OnEnemyCanvasClick);
         }
 
-        private readonly PlayerConnector _playerConnector;
+        private readonly Session _session;
 
         public RelayCommand EnemyCanvasClick { get; }
 
@@ -31,7 +31,7 @@ namespace WpfApp.GameSession {
 
         public Score Score { get; }
 
-        public string WhoIsGoing => _playerConnector.IsPlayerGoing ? "Ваш ход" : "Противник ходит";
+        public string WhoIsGoing => _session.IsPlayerGoing ? "Ваш ход" : "Противник ходит";
 
         public Battlefield PlayerBattlefield { get; }
         public Battlefield EnemyBattlefield { get; }
@@ -40,12 +40,11 @@ namespace WpfApp.GameSession {
         public int EnemyCanvasPositionY { get; set; }
 
         private void OnEnemyCanvasClick() {
+            if (!_session.IsPlayerGoing) return;
             PlayerBattlefield.CalculateCoordinates(new(EnemyCanvasPositionX, EnemyCanvasPositionY))
                 .IfSome(coordinates => {
-                    if (_playerConnector.IsPlayerGoing) {
-                        _playerConnector.Go(coordinates);
-                        EnemyBattlefield.AddCross(coordinates);
-                    }
+                    _session.Go(coordinates);
+                    // EnemyBattlefield.AddCross(coordinates);
                 });
         }
     }

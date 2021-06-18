@@ -10,16 +10,16 @@ using LanguageExt;
 
 namespace WpfApp.Toolkit {
     public abstract class Validatable : ViewModel, INotifyDataErrorInfo {
-        protected readonly IDictionary<string, ImmutableArray<string>> Errors =
+        private readonly IDictionary<string, ImmutableArray<string>> _errors =
             new Dictionary<string, ImmutableArray<string>>();
 
         public IEnumerable GetErrors(string propertyName) =>
-            Errors.ContainsKey(propertyName)
-                ? Errors[propertyName]
+            _errors.ContainsKey(propertyName)
+                ? _errors[propertyName]
                 : null;
 
         public bool HasErrors =>
-            Errors.Any();
+            _errors.Any();
 
         protected override void SetProperty<T>(ref T member, T val, [CallerMemberName] string propertyName = null) {
             base.SetProperty(ref member, val, propertyName);
@@ -34,14 +34,14 @@ namespace WpfApp.Toolkit {
             };
             var results = new List<ValidationResult>();
             Validator.TryValidateProperty(value, context, results);
-            var oldErrors = Errors.TryGetValue(propertyName);
+            var oldErrors = _errors.TryGetValue(propertyName);
             var newErrors = results
                 .Map(result => result.ErrorMessage)
                 .ToImmutableArray();
             if (newErrors.Any()) {
-                Errors[propertyName] = newErrors;
+                _errors[propertyName] = newErrors;
             } else {
-                Errors.Remove(propertyName);
+                _errors.Remove(propertyName);
             }
 
             var isErrorsChanged = oldErrors
@@ -50,6 +50,11 @@ namespace WpfApp.Toolkit {
             if (isErrorsChanged) {
                 ErrorsChanged?.Invoke(this, new(propertyName));
             }
+        }
+
+        protected void SetError(string propertyName, IEnumerable<string> messages) {
+            _errors[propertyName] = messages.ToImmutableArray();
+            ErrorsChanged?.Invoke(this, new(propertyName));
         }
     }
 }
