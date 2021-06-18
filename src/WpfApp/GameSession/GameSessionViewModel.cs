@@ -2,12 +2,14 @@
 using System.Linq;
 using Core;
 using Core.Field;
+using Core.Session;
 using WpfApp.GameBattlefield;
 using WpfApp.Toolkit;
 
 namespace WpfApp.GameSession {
     public class GameSessionViewModel : ViewModel {
-        public GameSessionViewModel(Player player, Player enemy, ImmutableArray<Ship> ships) {
+        public GameSessionViewModel(PlayerConnector playerConnector, Player player, Player enemy, ImmutableArray<Ship> ships) {
+            _playerConnector = playerConnector;
             Player = player;
             Enemy = enemy;
             Ships = ships;
@@ -15,6 +17,8 @@ namespace WpfApp.GameSession {
             PlayerBattlefield = new(ships);
             EnemyBattlefield = new(Enumerable.Empty<Ship>());
         }
+
+        private readonly PlayerConnector _playerConnector;
 
         public Player Player { get; }
         public Player Enemy { get; }

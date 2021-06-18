@@ -5,5 +5,6 @@ namespace Core.Serializers {
         string Serialize<T>(T value);
         T Deserialize<T>(string json);
         JObject DeserializeDynamic(string json);
+        T DeserializeObject<T>(JObject jObject);
     }
 }

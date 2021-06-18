@@ -64,7 +64,7 @@ namespace WpfApp.SelectConnectionMethod {
         protected override async void OnSubmit() {
             var (isConnected, player) = await _playerConnector.ConnectToGame(_player, _ships, InputGameCode);
             if (isConnected)
-                GameCreated(this, new(player));
+                GameCreated(this, new(_playerConnector, player));
 
             Errors[nameof(InputGameCode)] = isConnected
                 ? Enumerable.Empty<string>().ToImmutableArray()

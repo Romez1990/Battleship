@@ -19,9 +19,12 @@ namespace Core.Serializers {
             JsonConvert.SerializeObject(value, _settings);
 
         public T Deserialize<T>(string json) =>
-            JsonConvert.DeserializeObject<T>(json);
+            JsonConvert.DeserializeObject<T>(json, _settings);
 
         public JObject DeserializeDynamic(string json) =>
-            JObject.Parse(json);
+            (JObject)JsonConvert.DeserializeObject(json, _settings);
+
+        public T DeserializeObject<T>(JObject jObject) =>
+            JsonConvert.DeserializeObject<T>(jObject.ToString(), _settings);
     }
 }

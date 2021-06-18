@@ -21,17 +21,24 @@ namespace Core.Session {
         private readonly IJsonSerializer _serializer;
         private readonly WebsocketClient _socket;
 
+        private async Task Connect() {
+            await _socket.Start();
+        }
+
         public async Task<ConnectionCode> CreateGame(Player player, ImmutableArray<Ship> ships) {
             var completionSource = new TaskCompletionSource<ConnectionCode>();
-            _socket.MessageReceived.Subscribe(msg => {
+            IDisposable subscription = null;
+            subscription = _socket.MessageReceived.Subscribe(msg => {
                 var connectionResult = _serializer.DeserializeDynamic(msg.Text);
-                switch ((string)connectionResult["MessageType"]) {
+                switch ((string)connectionResult["message_type"]) {
                     case "connection_code":
-                        completionSource.SetResult(new((string)connectionResult["Code"]));
+                        var connectionCode = _serializer.DeserializeObject<ConnectionCode>(connectionResult);
+                        completionSource.SetResult(connectionCode);
                         break;
                     case "game_connected":
-                        var enemy = connectionResult.ToObject<ConnectionToGameResult>().Enemy;
-                        GameCreated?.Invoke(this, new(enemy));
+                        var enemy = _serializer.DeserializeObject<ConnectionToGameResult>(connectionResult).Enemy;
+                        subscription.Dispose();
+                        GameCreated?.Invoke(this, new(this, enemy));
                         break;
                     default:
                         throw new("Unexpected message type");
@@ -49,8 +56,10 @@ namespace Core.Session {
         public async Task<ConnectionToGameResult> ConnectToGame(Player player, ImmutableArray<Ship> ships,
             string connectionCode) {
             var completionSource = new TaskCompletionSource<ConnectionToGameResult>();
-            _socket.MessageReceived.Subscribe(msg => {
+            IDisposable subscription = null;
+            subscription = _socket.MessageReceived.Subscribe(msg => {
                 var connectionToGameResult = _serializer.Deserialize<ConnectionToGameResult>(msg.Text);
+                subscription.Dispose();
                 completionSource.SetResult(connectionToGameResult);
             });
             await Connect();
@@ -58,10 +67,6 @@ namespace Core.Session {
             var text = _serializer.Serialize(message);
             _socket.Send(text);
             return await completionSource.Task;
-        }
-
-        private async Task Connect() {
-            await _socket.Start();
         }
     }
 }
