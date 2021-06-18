@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using Core.Field;
 using Core.GameSession;
@@ -42,9 +43,14 @@ namespace WpfApp.GameSession {
         private void OnEnemyCanvasClick() {
             if (!_session.IsPlayerGoing) return;
             PlayerBattlefield.CalculateCoordinates(new(EnemyCanvasPositionX, EnemyCanvasPositionY))
-                .IfSome(coordinates => {
-                    _session.Go(coordinates);
-                    // EnemyBattlefield.AddCross(coordinates);
+                .IfSome(async coordinates => {
+                    if (EnemyBattlefield.CrossAlreadyExists(coordinates)) return;
+                    var shotResult = await _session.Go(coordinates);
+                    EnemyBattlefield.AddCross(coordinates);
+                    if (shotResult.Destroyed) {
+                        EnemyBattlefield.AddShip(shotResult.DestroyedShip);
+                    }
+                    Debug.Print(shotResult.Question.Text);
                 });
         }
     }

@@ -71,14 +71,15 @@ namespace WpfApp.GameBattlefield {
         public void AddShip(Ship ship) =>
             _shipRectangles.Add(ToShipRectangle(ship));
 
-        private readonly List<Cross> _crosses = new();
+        private readonly List<Vector> _crosses = new();
         private readonly ObservableCollection<CrossRectangle> _crossRectangles = new();
 
+        public bool CrossAlreadyExists(Vector coordinates) =>
+            _crosses.Contains(coordinates);
+
         public void AddCross(Vector coordinates) {
-            var cross = new Cross(coordinates);
-            if (_crosses.Contains(cross)) return;
-            _crosses.Add(cross);
-            _crossRectangles.Add(new(cross, CellSize, CrossThickness, ShipOffset));
+            _crosses.Add(coordinates);
+            _crossRectangles.Add(new(coordinates, CellSize, CrossThickness, ShipOffset));
         }
 
         public Option<Vector> CalculateCoordinates(Vector coordinates) {

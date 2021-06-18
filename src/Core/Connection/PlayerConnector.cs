@@ -36,7 +36,8 @@ namespace Core.Connection {
                         completionSource.SetResult(connectionCode);
                         break;
                     case "game_connected":
-                        var (_, enemy, isPlayerGoing) = _serializer.DeserializeObject<ConnectionToGameResult>(connectionResult);
+                        var (_, enemy, isPlayerGoing) =
+                            _serializer.DeserializeObject<ConnectionToGameResult>(connectionResult);
                         subscription.Dispose();
                         GameCreated?.Invoke(this, new(_socket, isPlayerGoing, enemy));
                         break;
@@ -60,10 +61,11 @@ namespace Core.Connection {
             subscription = _socket.MessageReceived.Subscribe(msg => {
                 subscription.Dispose();
                 var connectionToGameResult = _serializer.Deserialize<ConnectionToGameResult>(msg.Text);
-                if (connectionToGameResult.IsConnected) {
+                if (!connectionToGameResult.IsConnected) {
+                    completionSource.SetResult(connectionToGameResult);
+                } else {
                     GameCreated?.Invoke(this, new(_socket, connectionToGameResult.Go, connectionToGameResult.Enemy));
                 }
-                completionSource.SetResult(connectionToGameResult);
             });
             await Connect();
             var message = new CreateGameMessage(new(player, ships, connectionCode));

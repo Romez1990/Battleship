@@ -1,11 +1,10 @@
 ﻿using System;
-using Core.Field;
 using Core.Geometry;
 
 namespace WpfApp.GameBattlefield {
     public record CrossRectangle : Rectangle {
-        public CrossRectangle(Cross cross, int cellSize, int thickness, Func<int, int> calculateOffset) : base(
-            cross.Map(calculateOffset),
+        public CrossRectangle(Vector coordinates, int cellSize, int thickness, Func<int, int> calculateOffset) : base(
+            coordinates.Map(calculateOffset),
             new(cellSize)
         ) {
             Thickness = thickness;

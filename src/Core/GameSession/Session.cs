@@ -16,13 +16,13 @@ namespace Core.GameSession {
 
         public bool IsPlayerGoing { get; set; }
 
-        public async Task<object> Go(Vector coordinates) {
-            var completionSource = new TaskCompletionSource<object>();
+        public async Task<ShotResult> Go(Vector coordinates) {
+            var completionSource = new TaskCompletionSource<ShotResult>();
             IDisposable subscription = null;
             subscription = _socket.MessageReceived.Subscribe(msg => {
                 subscription.Dispose();
-                var connectionToGameResult = _serializer.Deserialize<ConnectionToGameResult>(msg.Text);
-                completionSource.SetResult(connectionToGameResult);
+                var shotResult = _serializer.Deserialize<ShotResult>(msg.Text);
+                completionSource.SetResult(shotResult);
             });
 
             var moveMessage = new MoveMessage(coordinates);
