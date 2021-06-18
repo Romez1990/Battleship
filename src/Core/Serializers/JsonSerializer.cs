@@ -8,15 +8,15 @@ namespace Core.Serializers {
             var contractResolver = new DefaultContractResolver {
                 NamingStrategy = new SnakeCaseNamingStrategy(),
             };
-            _serializerSettings = new() {
+            _settings = new() {
                 ContractResolver = contractResolver,
             };
         }
 
-        private readonly JsonSerializerSettings _serializerSettings;
+        private readonly JsonSerializerSettings _settings;
 
         public string Serialize<T>(T value) =>
-            JsonConvert.SerializeObject(value, _serializerSettings);
+            JsonConvert.SerializeObject(value, _settings);
 
         public T Deserialize<T>(string json) =>
             JsonConvert.DeserializeObject<T>(json);
