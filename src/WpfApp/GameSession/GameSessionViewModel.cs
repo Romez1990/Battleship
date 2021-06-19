@@ -11,8 +11,8 @@ using WpfApp.Toolkit;
 namespace WpfApp.GameSession {
     public class GameSessionViewModel : ViewModel {
         public GameSessionViewModel(WebsocketClient socket, Player player, Player enemy,
-            ImmutableArray<Ship> ships) {
-            _session = new(socket);
+            ImmutableArray<Ship> ships, bool isPlayerGoing) {
+            _session = new(socket, isPlayerGoing);
             Player = player;
             Enemy = enemy;
             Ships = ships;

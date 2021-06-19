@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Core.Connection;
 using Core.Geometry;
 using Core.Serializers;
 using Websocket.Client;
 
 namespace Core.GameSession {
     public class Session {
-        public Session(WebsocketClient socket) {
+        public Session(WebsocketClient socket, bool isPlayerGoing) {
             _socket = socket;
+            IsPlayerGoing = isPlayerGoing;
         }
 
         private readonly WebsocketClient _socket;

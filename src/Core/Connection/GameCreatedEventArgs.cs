@@ -6,12 +6,15 @@ namespace Core.Connection {
     public class GameCreatedEventArgs : EventArgs {
         public GameCreatedEventArgs(WebsocketClient socket, bool? isPlayerGoing, Player enemy) {
             Socket = socket;
-            IsPlayerGoing = isPlayerGoing;
+            _isPlayerGoing = isPlayerGoing;
             Enemy = enemy;
         }
 
         public WebsocketClient Socket { get; }
-        public bool? IsPlayerGoing { get; }
+        private readonly bool? _isPlayerGoing;
+
+        public bool IsPlayerGoing => _isPlayerGoing ?? throw new("isPlayerGoing is null");
+
         public Player Enemy { get; }
     }
 }

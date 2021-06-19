@@ -47,6 +47,6 @@ namespace WpfApp {
 
         private void SetGameSession(object sender, GameCreatedEventArgs e) =>
             Dispatcher.CurrentDispatcher.Invoke(() =>
-                CurrentViewModel = new GameSessionViewModel(e.Socket, _player, _enemy = e.Enemy, _ships));
+                CurrentViewModel = new GameSessionViewModel(e.Socket, _player, _enemy = e.Enemy, _ships, e.IsPlayerGoing));
     }
 }
