@@ -11,7 +11,13 @@ namespace Core.Connection {
     public class PlayerConnector {
         public PlayerConnector(EventHandler<GameCreatedEventArgs> gameCreated) {
             GameCreated += gameCreated;
-            _socket = new(new("ws://127.0.0.1:8000/connect")) {
+#if DEBUG
+            var host = "127.0.0.1:8000";
+            // host = "smart-battleship.herokuapp.com";
+#else
+            var host = "smart-battleship.herokuapp.com";
+#endif
+            _socket = new(new($"ws://{host}/connect")) {
                 ReconnectTimeout = TimeSpan.FromSeconds(3000),
             };
             _socket.ReconnectionHappened.Subscribe(info =>
@@ -36,10 +42,9 @@ namespace Core.Connection {
                         completionSource.SetResult(connectionCode);
                         break;
                     case "game_connected":
-                        var (_, enemy, isPlayerGoing) =
-                            _serializer.DeserializeObject<ConnectionToGameResult>(connectionResult);
+                        var result = _serializer.DeserializeObject<ConnectionToGameResult>(connectionResult);
                         subscription.Dispose();
-                        GameCreated?.Invoke(this, new(_socket, isPlayerGoing, enemy));
+                        GameCreated?.Invoke(this, new(_socket, result.Go, result.Enemy));
                         break;
                     default:
                         throw new("Unexpected message type");
@@ -61,9 +66,8 @@ namespace Core.Connection {
             subscription = _socket.MessageReceived.Subscribe(msg => {
                 subscription.Dispose();
                 var connectionToGameResult = _serializer.Deserialize<ConnectionToGameResult>(msg.Text);
-                if (!connectionToGameResult.IsConnected) {
-                    completionSource.SetResult(connectionToGameResult);
-                } else {
+                completionSource.SetResult(connectionToGameResult);
+                if (connectionToGameResult.IsConnected) {
                     GameCreated?.Invoke(this, new(_socket, connectionToGameResult.Go, connectionToGameResult.Enemy));
                 }
             });

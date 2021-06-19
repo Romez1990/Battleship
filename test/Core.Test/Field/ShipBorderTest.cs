@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace Core.Test.Field {
     public class ShipBorderTest {
         [SetUp]
-        public void Setup() { }
+        public void SetUp() { }
 
         [Test]
         public void Collides_ReturnsTrue_WhenShipCollides() {

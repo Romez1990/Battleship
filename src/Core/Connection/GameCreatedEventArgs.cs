@@ -11,8 +11,8 @@ namespace Core.Connection {
         }
 
         public WebsocketClient Socket { get; }
-        private readonly bool? _isPlayerGoing;
 
+        private readonly bool? _isPlayerGoing;
         public bool IsPlayerGoing => _isPlayerGoing ?? throw new("isPlayerGoing is null");
 
         public Player Enemy { get; }

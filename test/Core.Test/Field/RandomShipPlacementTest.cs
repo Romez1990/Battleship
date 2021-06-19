@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace Core.Test.Field {
     public class RandomShipPlacementTest {
         [SetUp]
-        public void Setup() {
+        public void SetUp() {
             _randomShipPlacement = new();
         }
 

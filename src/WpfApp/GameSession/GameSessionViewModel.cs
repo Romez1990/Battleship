@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Linq;
+using System.Windows.Threading;
 using Core.Field;
 using Core.GameSession;
 using Core.PlayerData;
@@ -17,8 +17,10 @@ namespace WpfApp.GameSession {
             Enemy = enemy;
             Ships = ships;
             Score = new();
-            PlayerBattlefield = new(ships);
-            EnemyBattlefield = new(Enumerable.Empty<Ship>());
+            Dispatcher.CurrentDispatcher.Invoke(() => {
+                PlayerBattlefield = new(ships);
+                EnemyBattlefield = new(Enumerable.Empty<Ship>());
+            }, DispatcherPriority.ContextIdle);
             EnemyCanvasClick = new(OnEnemyCanvasClick);
         }
 
@@ -34,8 +36,8 @@ namespace WpfApp.GameSession {
 
         public string WhoIsGoing => _session.IsPlayerGoing ? "Ваш ход" : "Противник ходит";
 
-        public Battlefield PlayerBattlefield { get; }
-        public Battlefield EnemyBattlefield { get; }
+        public Battlefield PlayerBattlefield { get; set; }
+        public Battlefield EnemyBattlefield { get; set; }
 
         public int EnemyCanvasPositionX { get; set; }
         public int EnemyCanvasPositionY { get; set; }
@@ -50,7 +52,6 @@ namespace WpfApp.GameSession {
                     if (shotResult.Destroyed) {
                         EnemyBattlefield.AddShip(shotResult.DestroyedShip);
                     }
-                    Debug.Print(shotResult.Question.Text);
                 });
         }
     }

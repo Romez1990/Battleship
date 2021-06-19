@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
+using System.Windows.Threading;
 using Core.Field;
 using Core.Geometry;
 using LanguageExt;
@@ -15,13 +16,15 @@ namespace WpfApp.GameBattlefield {
         public Battlefield(IEnumerable<Ship> ships) {
             FieldSize = Field.Size.Map(ShipOffset) + GridThickness + LabelSize;
 
-            GraphicObjects = new() {
-                new CollectionContainer { Collection = new[] { new BackgroundRectangle(FieldSize) } },
-                new CollectionContainer { Collection = CreateGridLines() },
-                new CollectionContainer { Collection = CreateRowLabels() },
-                new CollectionContainer { Collection = _shipRectangles = new(ships.Map(ToShipRectangle)) },
-                new CollectionContainer { Collection = _crossRectangles },
-            };
+            Dispatcher.CurrentDispatcher.Invoke(() => {
+                GraphicObjects = new() {
+                    new CollectionContainer { Collection = new[] { new BackgroundRectangle(FieldSize) } },
+                    new CollectionContainer { Collection = CreateGridLines() },
+                    new CollectionContainer { Collection = CreateRowLabels() },
+                    new CollectionContainer { Collection = _shipRectangles = new(ships.Map(ToShipRectangle)) },
+                    new CollectionContainer { Collection = _crossRectangles },
+                };
+            }, DispatcherPriority.ContextIdle);
         }
 
         public const int CellSize = 50;
@@ -32,7 +35,7 @@ namespace WpfApp.GameBattlefield {
 
         public Vector FieldSize { get; }
 
-        public CompositeCollection GraphicObjects { get; }
+        public CompositeCollection GraphicObjects { get; set; }
 
         private ImmutableArray<GridRectangle> CreateGridLines() =>
             CreateGridLinesInRow(Field.Size.X, Orientation.Horizontal)
@@ -63,7 +66,7 @@ namespace WpfApp.GameBattlefield {
                     orientation.GetType()),
             };
 
-        private readonly ObservableCollection<ShipRectangle> _shipRectangles;
+        private ObservableCollection<ShipRectangle> _shipRectangles;
 
         private ShipRectangle ToShipRectangle(Ship ship) =>
             new(ship, CellSize, GridThickness, ShipOffset);

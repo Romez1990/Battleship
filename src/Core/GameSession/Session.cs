@@ -30,5 +30,20 @@ namespace Core.GameSession {
             _socket.Send(text);
             return await completionSource.Task;
         }
+
+        public async Task<AnswerResult> Answer(int answerIndex) {
+            var completionSource = new TaskCompletionSource<AnswerResult>();
+            IDisposable subscription = null;
+            subscription = _socket.MessageReceived.Subscribe(msg => {
+                subscription.Dispose();
+                var result = _serializer.Deserialize<AnswerResult>(msg.Text);
+                completionSource.SetResult(result);
+            });
+
+            var message = new AnswerMessage(answerIndex);
+            var text = _serializer.Serialize(message);
+            _socket.Send(text);
+            return await completionSource.Task;
+        }
     }
 }

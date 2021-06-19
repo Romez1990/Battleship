@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace Core.Test.Geometry {
     public class RectangleTest {
         [SetUp]
-        public void Setup() { }
+        public void SetUp() { }
 
         [Test]
         public void Collides_ReturnsTrue_WhenShipCollides() {
