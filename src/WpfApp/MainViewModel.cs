@@ -48,7 +48,7 @@ namespace WpfApp {
             CurrentViewModel = new SelectConnectionMethodViewModel(_player, _ships = e.Ships, SetGameSession);
 
         private void SetGameSession(object sender, GameCreatedEventArgs e) =>
-            Dispatcher.CurrentDispatcher.BeginInvoke(() =>
+            Dispatcher.CurrentDispatcher.Invoke(() =>
                 CurrentViewModel = new GameSessionViewModel(e.Socket, _player, _enemy = e.Enemy, _ships, e.IsPlayerGoing));
 
         private void SetScoreboard(object sender, EventArgs e) =>
