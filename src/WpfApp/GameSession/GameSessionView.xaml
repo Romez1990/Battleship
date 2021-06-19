@@ -167,7 +167,7 @@
             </ItemsControl>
         </Grid>
 
-        <Border Visibility="Hidden"
+        <Border Visibility="{Binding ShowQuestion}"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 BorderThickness="2"
@@ -175,12 +175,27 @@
                 BorderBrush="Black"
                 Background="White">
             <StackPanel Margin="16">
-                <TextBlock FontSize="18">Что теряют космонавты во время полёта?</TextBlock>
-                <RadioButton FontSize="18">Вес</RadioButton>
-                <RadioButton FontSize="18">Сознание</RadioButton>
-                <RadioButton FontSize="18">Сон</RadioButton>
-                <RadioButton FontSize="18">Память</RadioButton>
-                <Button HorizontalAlignment="Center">Ответить</Button>
+                <TextBlock FontSize="18"
+                           Text="{Binding CurrentQuestion.Text}"/>
+                <RadioButton FontSize="18"
+                             Command="{Binding CheckAnswer}"
+                             CommandParameter="0"
+                             Content="{Binding Answer1}" />
+                <RadioButton FontSize="18"
+                             Command="{Binding CheckAnswer}"
+                             CommandParameter="1"
+                             Content="{Binding Answer2}" />
+                <RadioButton FontSize="18"
+                             Command="{Binding CheckAnswer}"
+                             CommandParameter="2"
+                             Content="{Binding Answer3}" />
+                <RadioButton FontSize="18"
+                             Command="{Binding CheckAnswer}"
+                             CommandParameter="3"
+                             Content="{Binding Answer4}" />
+                <Button HorizontalAlignment="Center"
+                        Command="{Binding Answer}"
+                        Content="Ответить" />
             </StackPanel>
         </Border>
     </Grid>

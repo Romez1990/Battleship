@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Linq;
+using System.Windows;
 using Core.Field;
 using Core.GameSession;
 using Core.PlayerData;
@@ -39,6 +40,43 @@ namespace WpfApp.GameSession {
         public int EnemyCanvasPositionX { get; set; }
         public int EnemyCanvasPositionY { get; set; }
 
+
+        private Visibility _showQuestion = Visibility.Hidden;
+        public Visibility ShowQuestion {
+            get => _showQuestion;
+            set => SetProperty(ref _showQuestion, value);
+        }
+
+        private Question _currentQuestion;
+        public Question CurrentQuestion {
+            get => _currentQuestion;
+            set => SetProperty(ref _currentQuestion, value);
+        }
+
+        private string _answer1;
+        public string Answer1 {
+            get => _answer1;
+            set => SetProperty(ref _answer1, value);
+        }
+
+        private string _answer2;
+        public string Answer2 {
+            get => _answer2;
+            set => SetProperty(ref _answer2, value);
+        }
+
+        private string _answer3;
+        public string Answer3 {
+            get => _answer3;
+            set => SetProperty(ref _answer3, value);
+        }
+
+        private string _answer4;
+        public string Answer4 {
+            get => _answer4;
+            set => SetProperty(ref _answer4, value);
+        }
+
         private void OnEnemyCanvasClick() {
             if (!_session.IsPlayerGoing) return;
             PlayerBattlefield.CalculateCoordinates(new(EnemyCanvasPositionX, EnemyCanvasPositionY))
@@ -46,6 +84,16 @@ namespace WpfApp.GameSession {
                     if (EnemyBattlefield.CrossAlreadyExists(coordinates)) return;
                     var shotResult = await _session.Go(coordinates);
                     EnemyBattlefield.AddCross(coordinates);
+
+                    if (shotResult.Hit) {
+                        ShowQuestion = Visibility.Visible;
+                        CurrentQuestion = shotResult.Question;
+                        Answer1 = CurrentQuestion.Answers[0];
+                        Answer2 = CurrentQuestion.Answers[1];
+                        Answer3 = CurrentQuestion.Answers[2];
+                        Answer4 = CurrentQuestion.Answers[3];
+                    }
+
                     if (shotResult.Destroyed) {
                         EnemyBattlefield.AddShip(shotResult.DestroyedShip);
                     }

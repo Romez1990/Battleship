@@ -30,6 +30,9 @@
                 </Style>
             </ItemsControl.ItemContainerStyle>
             <ItemsControl.Resources>
+                <DataTemplate DataType="{x:Type gb:BackgroundRectangle}">
+                    <Rectangle Fill="White" />
+                </DataTemplate>
                 <DataTemplate DataType="{x:Type gb:GridRectangle}">
                     <Rectangle Fill="Black" />
                 </DataTemplate>

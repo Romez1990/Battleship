@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Immutable;
-using System.Windows.Threading;
+using System.Windows;
 using Core.Connection;
 using Core.Field;
 using Core.PlayerData;
@@ -48,7 +48,7 @@ namespace WpfApp {
             CurrentViewModel = new SelectConnectionMethodViewModel(_player, _ships = e.Ships, SetGameSession);
 
         private void SetGameSession(object sender, GameCreatedEventArgs e) =>
-            Dispatcher.CurrentDispatcher.Invoke(() =>
+            Application.Current.Dispatcher.Invoke(() =>
                 CurrentViewModel = new GameSessionViewModel(e.Socket, _player, _enemy = e.Enemy, _ships, e.IsPlayerGoing));
 
         private void SetScoreboard(object sender, EventArgs e) =>
