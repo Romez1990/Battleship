@@ -7,8 +7,8 @@
              xmlns:gb="clr-namespace:WpfApp.GameBattlefield"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel Margin="16">
-        <Grid>
+    <Grid>
+        <Grid Margin="16">
             <Grid.RowDefinitions>
                 <RowDefinition Height="30" />
                 <RowDefinition Height="30" />
@@ -166,5 +166,22 @@
                 </ItemsControl.Resources>
             </ItemsControl>
         </Grid>
-    </StackPanel>
+
+        <Border Visibility="Hidden"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                BorderThickness="2"
+                CornerRadius="10"
+                BorderBrush="Black"
+                Background="White">
+            <StackPanel Margin="16">
+                <TextBlock FontSize="18">Что теряют космонавты во время полёта?</TextBlock>
+                <RadioButton FontSize="18">Вес</RadioButton>
+                <RadioButton FontSize="18">Сознание</RadioButton>
+                <RadioButton FontSize="18">Сон</RadioButton>
+                <RadioButton FontSize="18">Память</RadioButton>
+                <Button HorizontalAlignment="Center">Ответить</Button>
+            </StackPanel>
+        </Border>
+    </Grid>
 </UserControl>

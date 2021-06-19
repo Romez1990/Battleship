@@ -14,14 +14,13 @@ namespace WpfApp {
         public MainViewModel() {
             SetGameStart();
 #if DEBUG
-            _player = new("Максим", "Жуков");
+            _player = new("Валида", "Насирова");
+            _enemy = new("Иван", "Иванов");
             _ships = new RandomShipPlacement().GetShips();
 
             // SetPlacementOfShips(this, new(_player));
-
-            SetSelectConnectionMethod(this, new(_ships));
-
-            // SetGameSession(this, new(null, true, _player));
+            // SetSelectConnectionMethod(this, new(_ships));
+            SetGameSession(this, new(null, true, _enemy));
 #endif
         }
 
