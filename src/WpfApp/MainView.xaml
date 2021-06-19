@@ -7,9 +7,10 @@
         xmlns:ps="clr-namespace:WpfApp.PlacementOfShips"
         xmlns:sc="clr-namespace:WpfApp.SelectConnectionMethod"
         xmlns:gss="clr-namespace:WpfApp.GameSession"
+        xmlns:s="clr-namespace:WpfApp.Scoreboard"
         xmlns:local="clr-namespace:WpfApp"
         mc:Ignorable="d"
-        Title="MainWindow"
+        Title="Smart Battleship"
         Height="760"
         Width="740"
         WindowStartupLocation="CenterScreen"
@@ -39,6 +40,10 @@
 
         <DataTemplate DataType="{x:Type gss:GameSessionViewModel}">
             <gss:CreateGameView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type s:ScoreboardViewModel}">
+            <s:ScoreboardView />
         </DataTemplate>
 
         <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">

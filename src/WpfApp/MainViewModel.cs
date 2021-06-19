@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Immutable;
 using System.Windows.Threading;
 using Core.Connection;
@@ -6,6 +7,7 @@ using Core.PlayerData;
 using WpfApp.GameSession;
 using WpfApp.GameStart;
 using WpfApp.PlacementOfShips;
+using WpfApp.Scoreboard;
 using WpfApp.SelectConnectionMethod;
 using WpfApp.Toolkit;
 
@@ -19,8 +21,9 @@ namespace WpfApp {
             _ships = new RandomShipPlacement().GetShips();
 
             // SetPlacementOfShips(this, new(_player));
-            // SetSelectConnectionMethod(this, new(_ships));
-            SetGameSession(this, new(null, true, _enemy));
+            SetSelectConnectionMethod(this, new(_ships));
+            // SetGameSession(this, new(null, true, _enemy));
+            // SetScoreboard(this, EventArgs.Empty);
 #endif
         }
 
@@ -47,5 +50,8 @@ namespace WpfApp {
         private void SetGameSession(object sender, GameCreatedEventArgs e) =>
             Dispatcher.CurrentDispatcher.BeginInvoke(() =>
                 CurrentViewModel = new GameSessionViewModel(e.Socket, _player, _enemy = e.Enemy, _ships, e.IsPlayerGoing));
+
+        private void SetScoreboard(object sender, EventArgs e) =>
+            CurrentViewModel = new ScoreboardViewModel();
     }
 }
