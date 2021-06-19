@@ -14,7 +14,7 @@ namespace WpfApp.GameBattlefield {
                 _ => throw new InvalidEnumArgumentException(nameof(orientation), (int)orientation,
                     orientation.GetType()),
             } + margin,
-            new Vector(size) - 2 * margin
+            new Vector(size, size) - 2 * margin
         ) {
             Label = label;
             HorizontalAlignment = orientation switch {

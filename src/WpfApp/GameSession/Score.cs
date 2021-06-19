@@ -1,19 +1,12 @@
-﻿using WpfApp.Toolkit;
+﻿namespace WpfApp.GameSession {
+    public record Score(int Player, int Enemy) {
+        public Score() : this(0, 0) { }
 
-namespace WpfApp.GameSession {
-    public class Score : Bindable {
-        private int _player = 0;
-        private int _enemy = 0;
+        public Score AddPointToPlayer() =>
+            new(Player + 1, Enemy);
 
-        public int Player {
-            get => _player;
-            set => SetProperty(ref _player, value);
-        }
-
-        public int Enemy {
-            get => _enemy;
-            set => SetProperty(ref _enemy, value);
-        }
+        public Score AddPointToEnemy() =>
+            new(Player, Enemy + 1);
 
         public override string ToString() =>
             $"{Player}:{Enemy}";

@@ -13,17 +13,20 @@ namespace Core.Test.GameSession {
             var randomShipPlacement = new RandomShipPlacement();
 
             var enemyConnector = new PlayerConnector((_, e) =>
-                _enemySession = new(e.Socket, e.IsPlayerGoing));
-            var connectionCode = await enemyConnector.CreateGame(new("", ""), _enemyShips = randomShipPlacement.GetShips());
+                _enemySession =
+                    new(e.Socket, e.IsPlayerGoing, (sender, e) => { }, (sender, e) => { }, (sender, e) => { }));
+            var connectionCode =
+                await enemyConnector.CreateGame(new("", ""), _enemyShips = randomShipPlacement.GetShips());
 
             var playerConnector = new PlayerConnector((_, e) =>
-                _playerSession = new(e.Socket, e.IsPlayerGoing));
-            await playerConnector.ConnectToGame(new("", ""), randomShipPlacement.GetShips(),
+                _playerSession = new(e.Socket, e.IsPlayerGoing, (sender, e) => { }, (sender, e) => { }, (sender, e) => { }));
+            await playerConnector.ConnectToGame(new("", ""), _playerShips = randomShipPlacement.GetShips(),
                 connectionCode.Code);
         }
 
         private Session _playerSession;
         private Session _enemySession;
+        private ImmutableArray<Ship> _playerShips;
         private ImmutableArray<Ship> _enemyShips;
 
         [Test]
@@ -44,6 +47,15 @@ namespace Core.Test.GameSession {
             var question = shotResult.Question;
             var answerIndex = 0;
             var answerResult = await _playerSession.Answer(answerIndex);
+        }
+
+        [Test]
+        public async Task Collides_ReturnsTrue_WhenShipCollides3() {
+            var shipCoordinates = _playerShips[0].Coordinates;
+
+            var shotResult = await _enemySession.Go(shipCoordinates);
+
+            Assert.IsTrue(shotResult.Hit);
         }
     }
 }

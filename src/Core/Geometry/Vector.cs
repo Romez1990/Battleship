@@ -2,10 +2,8 @@ using System;
 
 namespace Core.Geometry {
     public record Vector(int X, int Y) {
-        public Vector(int n) : this(n, n) { }
-
-        public static readonly Vector Zero = new(0);
-        public static readonly Vector Unit = new(1);
+        public static readonly Vector Zero = new(0, 0);
+        public static readonly Vector Unit = new(1, 1);
 
         public Vector Map(Func<int, int> fn) =>
             new(fn(X), fn(Y));
