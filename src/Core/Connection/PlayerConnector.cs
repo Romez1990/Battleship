@@ -18,14 +18,16 @@ namespace Core.Connection {
             var host = "smart-battleship.herokuapp.com";
 #endif
             _socket = new(new($"ws://{host}/connect")) {
-                ReconnectTimeout = TimeSpan.FromSeconds(3000),
+                ReconnectTimeout = TimeSpan.FromSeconds(30),
             };
-            _socket.ReconnectionHappened.Subscribe(info =>
+            _reconnectSubscription = _socket.ReconnectionHappened.Subscribe(info =>
                 Debug.Print($"Reconnection happened, type: {info.Type}"));
         }
 
         private readonly IJsonSerializer _serializer = new JsonSerializer();
         private readonly WebsocketClient _socket;
+
+        private readonly IDisposable _reconnectSubscription;
 
         private async Task Connect() {
             await _socket.Start();
@@ -44,6 +46,7 @@ namespace Core.Connection {
                     case "game_connected":
                         var result = _serializer.DeserializeObject<ConnectionToGameResult>(connectionResult);
                         subscription.Dispose();
+                        _reconnectSubscription.Dispose();
                         GameCreated?.Invoke(this, new(_socket, result.Go, result.Enemy));
                         break;
                     default:
@@ -67,9 +70,9 @@ namespace Core.Connection {
                 subscription.Dispose();
                 var connectionToGameResult = _serializer.Deserialize<ConnectionToGameResult>(msg.Text);
                 completionSource.SetResult(connectionToGameResult);
-                if (connectionToGameResult.IsConnected) {
-                    GameCreated?.Invoke(this, new(_socket, connectionToGameResult.Go, connectionToGameResult.Enemy));
-                }
+                if (!connectionToGameResult.IsConnected) return;
+                _reconnectSubscription.Dispose();
+                GameCreated?.Invoke(this, new(_socket, connectionToGameResult.Go, connectionToGameResult.Enemy));
             });
             await Connect();
             var message = new CreateGameMessage(new(player, ships, connectionCode));

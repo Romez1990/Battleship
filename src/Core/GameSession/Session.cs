@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Core.Geometry;
 using Core.Serializers;
@@ -6,12 +7,19 @@ using Websocket.Client;
 
 namespace Core.GameSession {
     public class Session {
-        public Session(WebsocketClient socket, bool isPlayerGoing, EventHandler<GetEnemyShotEventArgs> getEnemyShotHandler, EventHandler<GetEnemyAnswerEventArgs> getEnemyAnswerHandler, EventHandler playerTurn) {
+        public Session(WebsocketClient socket, bool isPlayerGoing,
+            EventHandler<GetEnemyShotEventArgs> getEnemyShotHandler,
+            EventHandler<GetEnemyAnswerEventArgs> getEnemyAnswerHandler, EventHandler playerTurn) {
             _socket = socket;
             IsPlayerGoing = isPlayerGoing;
             OnGetEnemyShot += getEnemyShotHandler;
             OnGetEnemyAnswer += getEnemyAnswerHandler;
             OnPlayerTurn += playerTurn;
+
+            _socket.ReconnectionHappened.Subscribe(info => {
+                Debug.Print($"Reconnection happened, type: {info.Type}");
+                _socket.MessageReceived.Subscribe(GetEnemyShot);
+            });
 
             _socket.MessageReceived.Subscribe(GetEnemyShot);
         }
@@ -46,7 +54,6 @@ namespace Core.GameSession {
             subscription = _socket.MessageReceived.Subscribe(msg => {
                 subscription.Dispose();
                 var result = _serializer.Deserialize<AnswerResult>(msg.Text);
-                EnemyGo();
                 completionSource.SetResult(result);
             });
             var message = new AnswerMessage(answerIndex);
