@@ -5,13 +5,13 @@ using System.Windows;
 using Core.Field;
 using Core.GameSession;
 using Core.PlayerData;
-using Websocket.Client;
+using WebSocketSharp;
 using WpfApp.GameBattlefield;
 using WpfApp.Toolkit;
 
 namespace WpfApp.GameSession {
     public class GameSessionViewModel : ViewModel {
-        public GameSessionViewModel(WebsocketClient socket, Player player, Player enemy,
+        public GameSessionViewModel(WebSocket socket, Player player, Player enemy,
             ImmutableArray<Ship> ships, bool isPlayerGoing) {
             _session = new(socket, isPlayerGoing, OnGetEnemyShot, OnGetEnemyAnswer, OnPlayerTurn);
             Player = player;

@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Core.Geometry;
 using Core.Serializers;
-using Websocket.Client;
+using WebSocketSharp;
 
 namespace Core.GameSession {
     public class Session {
-        public Session(WebsocketClient socket, bool isPlayerGoing,
+        public Session(WebSocket socket, bool isPlayerGoing,
             EventHandler<GetEnemyShotEventArgs> getEnemyShotHandler,
             EventHandler<GetEnemyAnswerEventArgs> getEnemyAnswerHandler, EventHandler playerTurn) {
             _socket = socket;
@@ -16,29 +15,26 @@ namespace Core.GameSession {
             OnGetEnemyAnswer += getEnemyAnswerHandler;
             OnPlayerTurn += playerTurn;
 
-            _socket.ReconnectionHappened.Subscribe(info =>
-                Debug.Print($"Reconnection happened, type: {info.Type}"));
-
-            _socket.MessageReceived.Subscribe(GetEnemyShot);
+            _socket.OnMessage += GetEnemyShot;
         }
 
-        private readonly WebsocketClient _socket;
+        private readonly WebSocket _socket;
         private readonly IJsonSerializer _serializer = new JsonSerializer();
 
         public bool IsPlayerGoing { get; set; }
 
         public async Task<ShotResult> Go(Vector coordinates) {
             var completionSource = new TaskCompletionSource<ShotResult>();
-            IDisposable subscription = null;
-            subscription = _socket.MessageReceived.Subscribe(msg => {
-                subscription.Dispose();
-                var shotResult = _serializer.Deserialize<ShotResult>(msg.Text);
+            void Handler(object sender, MessageEventArgs e) {
+                _socket.OnMessage -= Handler;
+                var shotResult = _serializer.Deserialize<ShotResult>(e.Data);
                 if (!shotResult.Hit) {
                     EnemyGo();
                 }
 
                 completionSource.SetResult(shotResult);
-            });
+            }
+            _socket.OnMessage += Handler;
 
             var moveMessage = new MoveMessage(coordinates);
             var text = _serializer.Serialize(moveMessage);
@@ -48,12 +44,13 @@ namespace Core.GameSession {
 
         public async Task<AnswerResult> Answer(int answerIndex) {
             var completionSource = new TaskCompletionSource<AnswerResult>();
-            IDisposable subscription = null;
-            subscription = _socket.MessageReceived.Subscribe(msg => {
-                subscription.Dispose();
-                var result = _serializer.Deserialize<AnswerResult>(msg.Text);
+            void Handler(object sender, MessageEventArgs e) {
+                _socket.OnMessage -= Handler;
+                var result = _serializer.Deserialize<AnswerResult>(e.Data);
                 completionSource.SetResult(result);
-            });
+            }
+            _socket.OnMessage += Handler;
+
             var message = new AnswerMessage(answerIndex);
             var text = _serializer.Serialize(message);
             _socket.Send(text);
@@ -67,9 +64,9 @@ namespace Core.GameSession {
             IsPlayerGoing = false;
         }
 
-        private void GetEnemyShot(ResponseMessage msg) {
+        private void GetEnemyShot(object sender, MessageEventArgs e) {
             if (IsPlayerGoing) return;
-            var result = _serializer.DeserializeDynamic(msg.Text);
+            var result = _serializer.DeserializeDynamic(e.Data);
             switch ((string)result["message_type"]) {
                 case "get_enemy_shot":
                     var enemyShot = _serializer.DeserializeObject<GetEnemyShot>(result);

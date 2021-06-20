@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Core.Field;
 using Core.PlayerData;
 using Core.Serializers;
-using Websocket.Client;
+using WebSocketSharp;
 
 namespace Core.Connection {
     public class PlayerConnector {
@@ -17,27 +17,24 @@ namespace Core.Connection {
 #else
             var host = "smart-battleship.herokuapp.com";
 #endif
-            _socket = new(new($"ws://{host}/connect")) {
-                ReconnectTimeout = TimeSpan.FromSeconds(30),
-            };
-            _reconnectSubscription = _socket.ReconnectionHappened.Subscribe(info =>
-                Debug.Print($"Reconnection happened, type: {info.Type}"));
+            _socket = new($"ws://{host}/connect");
+            _socket.OnClose += (sender, e) =>
+                Debug.Print($"Closed: {e.Reason}");
+            _socket.OnError += (sender, e) =>
+                Debug.Print($"Closed: {e.Message}");
         }
 
         private readonly IJsonSerializer _serializer = new JsonSerializer();
-        private readonly WebsocketClient _socket;
+        private readonly WebSocket _socket;
 
-        private readonly IDisposable _reconnectSubscription;
-
-        private async Task Connect() {
-            await _socket.Start();
+        private void Connect() {
+            _socket.ConnectAsync();
         }
 
         public async Task<ConnectionCode> CreateGame(Player player, ImmutableArray<Ship> ships) {
             var completionSource = new TaskCompletionSource<ConnectionCode>();
-            IDisposable subscription = null;
-            subscription = _socket.MessageReceived.Subscribe(msg => {
-                var connectionResult = _serializer.DeserializeDynamic(msg.Text);
+            void Handler(object sender, MessageEventArgs e) {
+                var connectionResult = _serializer.DeserializeDynamic(e.Data);
                 switch ((string)connectionResult["message_type"]) {
                     case "connection_code":
                         var connectionCode = _serializer.DeserializeObject<ConnectionCode>(connectionResult);
@@ -45,15 +42,15 @@ namespace Core.Connection {
                         break;
                     case "game_connected":
                         var result = _serializer.DeserializeObject<ConnectionToGameResult>(connectionResult);
-                        subscription.Dispose();
-                        _reconnectSubscription.Dispose();
+                        _socket.OnMessage -= Handler;
                         GameCreated?.Invoke(this, new(_socket, result.Go, result.Enemy));
                         break;
                     default:
                         throw new("Unexpected message type");
                 }
-            });
-            await Connect();
+            }
+            _socket.OnMessage += Handler;
+            Connect();
             var message = new CreateGameMessage(new(player, ships, null));
             var text = _serializer.Serialize(message);
             _socket.Send(text);
@@ -65,16 +62,15 @@ namespace Core.Connection {
         public async Task<ConnectionToGameResult> ConnectToGame(Player player, ImmutableArray<Ship> ships,
             string connectionCode) {
             var completionSource = new TaskCompletionSource<ConnectionToGameResult>();
-            IDisposable subscription = null;
-            subscription = _socket.MessageReceived.Subscribe(msg => {
-                subscription.Dispose();
-                var connectionToGameResult = _serializer.Deserialize<ConnectionToGameResult>(msg.Text);
+            void Handler(object sender, MessageEventArgs e) {
+                _socket.OnMessage -= Handler;
+                var connectionToGameResult = _serializer.Deserialize<ConnectionToGameResult>(e.Data);
                 completionSource.SetResult(connectionToGameResult);
                 if (!connectionToGameResult.IsConnected) return;
-                _reconnectSubscription.Dispose();
                 GameCreated?.Invoke(this, new(_socket, connectionToGameResult.Go, connectionToGameResult.Enemy));
-            });
-            await Connect();
+            }
+            _socket.OnMessage += Handler;
+            Connect();
             var message = new CreateGameMessage(new(player, ships, connectionCode));
             var text = _serializer.Serialize(message);
             _socket.Send(text);
