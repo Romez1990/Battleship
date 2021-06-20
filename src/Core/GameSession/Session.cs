@@ -16,10 +16,8 @@ namespace Core.GameSession {
             OnGetEnemyAnswer += getEnemyAnswerHandler;
             OnPlayerTurn += playerTurn;
 
-            _socket.ReconnectionHappened.Subscribe(info => {
-                Debug.Print($"Reconnection happened, type: {info.Type}");
-                _socket.MessageReceived.Subscribe(GetEnemyShot);
-            });
+            _socket.ReconnectionHappened.Subscribe(info =>
+                Debug.Print($"Reconnection happened, type: {info.Type}"));
 
             _socket.MessageReceived.Subscribe(GetEnemyShot);
         }
