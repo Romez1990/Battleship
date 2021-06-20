@@ -18,7 +18,7 @@ namespace Core.Connection {
             var host = "smart-battleship.herokuapp.com";
 #endif
             _socket = new(new($"ws://{host}/connect")) {
-                ReconnectTimeout = TimeSpan.FromSeconds(30),
+                ReconnectTimeout = TimeSpan.FromSeconds(3000),
             };
             _reconnectSubscription = _socket.ReconnectionHappened.Subscribe(info =>
                 Debug.Print($"Reconnection happened, type: {info.Type}"));
