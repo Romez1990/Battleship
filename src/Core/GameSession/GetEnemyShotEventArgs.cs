@@ -6,9 +6,11 @@ namespace Core.GameSession {
         public GetEnemyShotEventArgs(GetEnemyShot enemyShot) {
             Coordinates = enemyShot.Coordinates;
             Hit = enemyShot.Hit;
+            Won = enemyShot.Won;
         }
 
         public Vector Coordinates { get; }
         public bool Hit { get; }
+        public bool Won { get; }
     }
 }

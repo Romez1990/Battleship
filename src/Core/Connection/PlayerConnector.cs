@@ -29,9 +29,8 @@ namespace Core.Connection {
 
         private readonly IDisposable _reconnectSubscription;
 
-        private async Task Connect() {
+        private async Task Connect() =>
             await _socket.Start();
-        }
 
         public async Task<ConnectionCode> CreateGame(Player player, ImmutableArray<Ship> ships) {
             var completionSource = new TaskCompletionSource<ConnectionCode>();

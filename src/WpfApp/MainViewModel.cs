@@ -49,7 +49,7 @@ namespace WpfApp {
 
         private void SetGameSession(object sender, GameCreatedEventArgs e) =>
             Application.Current.Dispatcher.Invoke(() =>
-                CurrentViewModel = new GameSessionViewModel(e.Socket, _player, _enemy = e.Enemy, _ships, e.IsPlayerGoing));
+                CurrentViewModel = new GameSessionViewModel(e.Socket, _player, _enemy = e.Enemy, _ships, e.IsPlayerGoing, SetScoreboard));
 
         private void SetScoreboard(object sender, EventArgs e) =>
             CurrentViewModel = new ScoreboardViewModel();

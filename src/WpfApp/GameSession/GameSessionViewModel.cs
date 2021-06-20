@@ -12,7 +12,7 @@ using WpfApp.Toolkit;
 namespace WpfApp.GameSession {
     public class GameSessionViewModel : ViewModel {
         public GameSessionViewModel(WebsocketClient socket, Player player, Player enemy,
-            ImmutableArray<Ship> ships, bool isPlayerGoing) {
+            ImmutableArray<Ship> ships, bool isPlayerGoing, EventHandler gameOver) {
             _session = new(socket, isPlayerGoing, OnGetEnemyShot, OnGetEnemyAnswer, OnPlayerTurn);
             Player = player;
             Enemy = enemy;
@@ -23,6 +23,7 @@ namespace WpfApp.GameSession {
             EnemyCanvasClick = new(OnEnemyCanvasClick);
             CheckAnswer = new(OnCheckAnswer);
             Answer = new(OnAnswer);
+            GameOver += gameOver;
         }
 
         private readonly Session _session;
@@ -91,6 +92,8 @@ namespace WpfApp.GameSession {
             set => SetProperty(ref _answer4, value);
         }
 
+        private bool Won;
+
         private void OnEnemyCanvasClick() {
             if (!_session.IsPlayerGoing || ShowQuestion == Visibility.Visible) return;
 
@@ -116,6 +119,10 @@ namespace WpfApp.GameSession {
                     if (shotResult.Destroyed) {
                         EnemyBattlefield.AddShip(shotResult.DestroyedShip);
                     }
+
+                    if (shotResult.Won) {
+                        Won = true;
+                    }
                 });
         }
 
@@ -135,6 +142,10 @@ namespace WpfApp.GameSession {
             }
 
             ShowQuestion = Visibility.Hidden;
+
+            if (Won) {
+                GameOver?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         private void OnGetEnemyShot(object sender, GetEnemyShotEventArgs e) {
@@ -142,16 +153,26 @@ namespace WpfApp.GameSession {
             if (e.Hit) {
                 Score = Score.AddPointToEnemy();
             }
+
+            if (e.Won) {
+                Won = true;
+            }
         }
 
         private void OnGetEnemyAnswer(object sender, GetEnemyAnswerEventArgs e) {
             if (e.Right) {
                 Score = Score.AddPointToEnemy();
             }
+
+            if (Won) {
+                GameOver?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         private void OnPlayerTurn(object sender, EventArgs e) {
             OnPropertyChanged(nameof(WhoIsGoing));
         }
+
+        private event EventHandler GameOver;
     }
 }
